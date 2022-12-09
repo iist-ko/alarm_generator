@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding: UTF-8
 import csv
-from datetime import datetime
+import datetime
 import threading
 import time
 
@@ -54,42 +54,55 @@ class MainWindow(QMainWindow):
         Font = QtGui.QFont("Calibri", 11)
         Font.setBold(True)
         
-        self.setWindowIcon(QIcon('logo.jpg'))
+        self.setWindowIcon(QIcon('logo2.jpg'))
 
         p = QPalette()
-        p.setColor(QPalette.Background,QColor(255,255,255))
+        p.setColor(QPalette.Background,QColor(87,87,87))
         self.setPalette(p)
         
         self.button0 = QPushButton('Seyeon IP', self)
         self.button0.clicked.connect(self.Seyeon_IP_open)
         self.button0.setFont(Font)
         self.button0.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
         self.button0.setGeometry(10, 10, 100, 50)
         self.button1 = QPushButton('Truen IP', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
         self.button1.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
         self.button1.setGeometry(115, 10, 100, 50)
         self.button2 = QPushButton('Start', self)
         self.button2.clicked.connect(self.Start)
         self.button2.setFont(Font)
         self.button2.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
-        self.button2.setGeometry(220, 10, 100, 50)
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
+        self.button2.setGeometry(410, 10, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
         self.button3 = QPushButton('Reset', self)
         self.button3.clicked.connect(self.ResetTable)
         self.button3.setFont(Font)
         self.button3.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
-        self.button3.setGeometry(325, 10, 100, 50)
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
+        self.button3.setGeometry(625, 10, 100, 50)
+        self.button4 = QPushButton('Stop', self)
+        self.button4.setGeometry(520,10,100,50)
+        self.button4.toggle()
+        self.button4.setFont(Font)
+        self.button4.clicked.connect(self.StopAlarm)
+        self.button4.setStyleSheet("color: White;"
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
 
         # 카메라
         # self.frm1 = QLabel(self)
@@ -117,11 +130,15 @@ class MainWindow(QMainWindow):
         self.table.setGeometry(10, 70, 721, 328)
         self.table.setStyleSheet("color: black;"
 	                             "background-color: white;"
-	                             "border: 2px solid rgb(255, 0, 0);"
-                                 "")
+	                             "border: 2px solid rgb(31,31,31);"
+                                 "border-radius: 8px;")
 
         # QDialog 설정
         self.dialog = QDialog()
+
+        p = QPalette()
+        p.setColor(QPalette.Background, QColor(87, 87, 87))
+        self.dialog.setPalette(p)
 
     # 버튼 이벤트 함수
     def Seyeon_IP_open(self):
@@ -228,9 +245,19 @@ class MainWindow(QMainWindow):
         SaveB.setFont(myFont)
         SaveB.clicked.connect(lambda: self.Seyeon_Save_and_dialog_close(Name, NM, IP, ID, PS))
         SaveB.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
         # StartB.clicked.connect(lambda: self.Start(Name, NM, IP, ID, PS, ST))
+        LoadB = QPushButton('LOAD', self.dialog)
+        LoadB.resize(100,26)
+        LoadB.move(320,20)
+        LoadB.setFont(myFont)
+        LoadB.clicked.connect(lambda: self.Load_Seyeon(Name, NM, IP, ID, PS))
+        LoadB.setStyleSheet("color: White;"
+                            "background-color: rgb(31,31,31);"
+                            "border: 2px solid rgb(31,31,31);"
+                            "border-radius: 8px;")
 
         # btnDialog = QPushButton("OK", self.dialog)
         # btnDialog.move(100, 100)
@@ -238,7 +265,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('Seyeon')
-        self.dialog.setWindowIcon(QIcon('logo.png'))
+        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -277,10 +304,11 @@ class MainWindow(QMainWindow):
 
         myFont = QtGui.QFont("Calibri", 11)
         myFont.setBold(True)
-        Explain1 = QLabel('NAME                      IP                             ID                        '
-                          'PASS', self.dialog)
-        Explain1.setFont(myFont)
-        Explain1.move(22, 64)
+        # Explain1 = QLabel('NAME                      IP                             ID                        '
+        #                   'PASS', self.dialog)
+        # Explain1.setFont(myFont)
+        # Explain1.move(22, 64)
+
 
 
         Button_Font = QtGui.QFont("Calibri", 10)
@@ -348,9 +376,19 @@ class MainWindow(QMainWindow):
         SaveB.setFont(myFont)
         SaveB.clicked.connect(lambda: self.Save_and_dialog_close(Name, NM, IP, ID, PS))
         SaveB.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+	                               "background-color: rgb(31,31,31);"
+	                               "border: 2px solid rgb(31,31,31);"
+                                   "border-radius: 8px;")
         # StartB.clicked.connect(lambda: self.Start(Name, NM, IP, ID, PS, ST))
+        LoadB = QPushButton('LOAD', self.dialog)
+        LoadB.resize(100,26)
+        LoadB.move(320,20)
+        LoadB.setFont(myFont)
+        LoadB.clicked.connect(lambda: self.Load_Name(Name, NM, IP, ID, PS))
+        LoadB.setStyleSheet("color: White;"
+                            "background-color: rgb(31,31,31);"
+                            "border: 2px solid rgb(31,31,31);"
+                            "border-radius: 8px;")
 
         # btnDialog = QPushButton("OK", self.dialog)
         # btnDialog.move(100, 100)
@@ -358,7 +396,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('Truen')
-        self.dialog.setWindowIcon(QIcon('logo.jpg'))
+        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -421,7 +459,7 @@ class MainWindow(QMainWindow):
             print(FILE[i + 1])
             print(FILE[i + 2])
             print(FILE[i + 3])
-            Truen_thread ="Truen_GetHttp_thread.exe "+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
+            Truen_thread ="Truen_GetHttp_thread.exe"+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
             subprocess.Popen(Truen_thread, shell=False)
             time.sleep(1)
             print('thread start')
@@ -509,9 +547,8 @@ class MainWindow(QMainWindow):
         self.table.scrollTo(index)
         if table_Count > 99:
             table_Count = 0
-            #self.WriteCsv()
-            #self.ResetTable()
-            self.table
+            self.WriteCsv()
+            self.ResetTable()
         ##############################
     # Dialog 닫기 이벤트
 
@@ -584,6 +621,15 @@ class MainWindow(QMainWindow):
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
+
+    def Load_Seyeon(self,Name, NM, IP, ID, PS):
+        dial = QFileDialog.getOpenFileNames(self, 'open file', '~')
+
+    def Load_Name(self,Name,NM,IP,ID,PS):
+        dial = QFileDialog.getOpenFileNames(self, 'open file', '~')
+
+    def StopAlarm(self):
+        print("WIP")
 
     def ligth_status_check(self):
         state = light_dll['Usb_Qu_Getstate']()
