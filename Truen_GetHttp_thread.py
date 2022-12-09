@@ -1,7 +1,6 @@
 import requests
 from requests.auth import HTTPDigestAuth
 from scapy.all import *
-import sys
 
 protocols = {1: 'ICMP', 6: 'TCP', 17: 'UDP'}
 

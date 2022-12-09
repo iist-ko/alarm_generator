@@ -1,8 +1,9 @@
 #-*- encoding: utf-8 -*-
 
+from threading import Thread
+
 import requests
 from requests.auth import HTTPDigestAuth
-from threading import  Thread
 
 NM = ['nm0','nm1','nm2','nm3','nm4','nm5','nm6','nm7','nm8','nm9','nm10','nm11','nm12','nm13','nm14','nm15']
 IP = ['IP0','IP1','IP2','IP3','IP4','IP5','IP6','IP7','IP8','IP9','IP10','IP11','IP12','IP13','IP14','IP15']

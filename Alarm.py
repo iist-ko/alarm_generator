@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
 #coding: UTF-8
-import sys
-import os
+import csv
+import datetime
+import threading
+import time
+
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-import requests
-from requests.auth import HTTPDigestAuth
+from PyQt5.QtWidgets import *
 from scapy.all import *
-from multiprocessing import Process, Queue
-import datetime
-import csv
-import threading,time
 from serial import Serial
-import ctypes
 
 try:
     arduino = Serial('COM3', 9600)
