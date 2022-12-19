@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding: UTF-8
 import csv
-import datetime
+from datetime import datetime
 import threading
 import time
 
@@ -11,6 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from scapy.all import *
 from serial import Serial
+from ctypes import *
 
 try:
     arduino = Serial('COM3', 9600)
@@ -38,6 +39,9 @@ try :
     os.system('taskkill /f /im Truen_GetHttp_thread.exe')
 except :
     pass
+
+light_dll = WinDLL('./Ux64_dllc.dll')
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -460,7 +464,9 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-                arduino.write(b'y')
+                self.alarm_controll(red=2, sound=1)
+                time.sleep(2)
+                self.alarm_controll(red=0, sound=0)
             except:
                 pass
 
@@ -476,7 +482,7 @@ class MainWindow(QMainWindow):
         # 표에 데이터 삽입
         #print('table')
         #print(table_Count)
-        now = datetime.datetime.now()
+        now = datetime.now()
         nowDatetime = now.strftime('%m-%d %H:%M:%S')
         item1 = QTableWidgetItem(nowDatetime)
         item1.setTextAlignment(Qt.AlignCenter)
@@ -578,6 +584,35 @@ class MainWindow(QMainWindow):
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
+
+    def ligth_status_check(self):
+        state = light_dll['Usb_Qu_Getstate']()
+        if state == 0x1:
+            return 0
+        elif state == 0x2:
+            return 1
+        elif state == 0x4:
+            return 2
+        elif state == 0x8:
+            return 3
+        else :
+            print("Not Connect Usb")
+        return
+
+    class ArrayStruct(Structure):
+        _fields_ = [("char_t", POINTER(c_char))]
+
+    def alarm_controll(self, red, yellow=0, green=0, blue=0, white=0, sound=0):
+        C_index = self.ligth_status_check()
+        C_type = 0
+
+        c_char_t = self.ArrayStruct()
+        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, 0) # 마지막 0 -> sound로 바꿔줘야함
+        # c_char_t.char_t = (c_char * 6)(C_lampblink, C_lampoff, C_lampoff, C_lampoff, C_lampoff, 0)
+        Usb_Qu_write = light_dll['Usb_Qu_write'](C_index, C_type, c_char_t.char_t)
+        return Usb_Qu_write
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
