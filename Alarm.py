@@ -559,6 +559,7 @@ class MainWindow(QMainWindow):
 
     def ResetTable(self):
         global table_Count
+        self.WriteCsv()
         self.table.clear()
         self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용'])
         table_Count = 0
@@ -662,7 +663,7 @@ class MainWindow(QMainWindow):
         C_type = 0
 
         c_char_t = self.ArrayStruct()
-        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, 0) # 마지막 0 -> sound로 바꿔줘야함
+        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, 0) #
         # c_char_t.char_t = (c_char * 6)(C_lampblink, C_lampoff, C_lampoff, C_lampoff, C_lampoff, 0)
         Usb_Qu_write = light_dll['Usb_Qu_write'](C_index, C_type, c_char_t.char_t)
         return Usb_Qu_write
