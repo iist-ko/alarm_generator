@@ -53,14 +53,14 @@ class MainWindow(QMainWindow):
         # QButton 위젯 생성
         Font = QtGui.QFont("Calibri", 11)
         Font.setBold(True)
-        
+
         self.setWindowIcon(QIcon('logo2.jpg'))
 
         p = QPalette()
         p.setColor(QPalette.Background,QColor(255,255,255))
         self.setPalette(p)
-        
-        self.button0 = QPushButton('Seyeon IP', self)
+
+        self.button0 = QPushButton('9302/8020 IP', self)
         self.button0.clicked.connect(self.Seyeon_IP_open)
         self.button0.setFont(Font)
         self.button0.setStyleSheet("color: white;"
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
-        self.button1 = QPushButton('Truen IP', self)
+        self.button1 = QPushButton('3204 IP', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
         self.button1.setStyleSheet("color: white;"
@@ -103,6 +103,17 @@ class MainWindow(QMainWindow):
                         "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                         "border: 1px solid black;"
                         "border-radius: 20px;")
+        self.Alarm = QLabel('Alarm Option',self)
+        self.Alarm.move(600,120)
+        self.Alarm.setFont(Font)
+        self.rad1 = QRadioButton('Sound ON', self)
+        self.rad1.move(600,150)
+        self.rad1.setFont(Font)
+        self.rad1.clicked.connect(self.SoundOn)
+        self.rad2 = QRadioButton('Sound OFF',self)
+        self.rad2.move(600,180)
+        self.rad2.setFont(Font)
+        self.rad2.clicked.connect(self.SoundOff)
 
         # 카메라
         # self.frm1 = QLabel(self)
@@ -140,6 +151,11 @@ class MainWindow(QMainWindow):
         self.dialog.setPalette(p)
 
     # 버튼 이벤트 함수
+    def SoundOff(self):
+        print('wip')
+    def SoundOn(self):
+        print('wip')
+
     def Seyeon_IP_open(self):
         # 버튼 추가
         ############## LINE ###############
@@ -238,7 +254,7 @@ class MainWindow(QMainWindow):
         # StartB.move(271, 20)
         # StartB.setFont(myFont)
         # StartB.clicked.connect(lambda: self.Start(IP, ID, PS, ST))
-        
+
         SaveB = QPushButton('SAVE', self.dialog)
         SaveB.resize(100, 26)
         SaveB.move(170, 20)
