@@ -425,6 +425,7 @@ class MainWindow(QMainWindow):
         self.dialog.resize(520, 500)
         self.dialog.show()
 
+
     def Seyeon_Read_file(self,FILE,Case):
         if Case == 'NAME':
             f = open("Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
@@ -483,7 +484,7 @@ class MainWindow(QMainWindow):
             print(FILE[i + 1])
             print(FILE[i + 2])
             print(FILE[i + 3])
-            Truen_thread ="Truen_GetHttp_thread.exe"+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
+            Truen_thread ="Truen_GetHttp_thread.exe"+" "+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
             subprocess.Popen(Truen_thread, shell=False)
             time.sleep(1)
             print('thread start')
@@ -527,6 +528,7 @@ class MainWindow(QMainWindow):
             self.Write_Table(nm, nm2, Object=object)
             try:
                 self.alarm_controll(red=2, sound=self.soundCheck)
+                self.popUp_Event()
                 time.sleep(1.5)
                 self.alarm_controll(red=0, sound=0)
             except:
