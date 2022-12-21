@@ -11,6 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from scapy.all import *
 from serial import Serial
+from ctypes import *
 
 try:
     arduino = Serial('COM3', 9600)
@@ -39,6 +40,9 @@ try :
 except :
     pass
 
+light_dll = WinDLL('./Ux64_dllc.dll')
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -50,7 +54,7 @@ class MainWindow(QMainWindow):
         Font = QtGui.QFont("Calibri", 11)
         Font.setBold(True)
         
-        self.setWindowIcon(QIcon('logo.jpg'))
+        self.setWindowIcon(QIcon('logo2.jpg'))
 
         p = QPalette()
         p.setColor(QPalette.Background,QColor(255,255,255))
@@ -59,33 +63,46 @@ class MainWindow(QMainWindow):
         self.button0 = QPushButton('Seyeon IP', self)
         self.button0.clicked.connect(self.Seyeon_IP_open)
         self.button0.setFont(Font)
-        self.button0.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+        self.button0.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
         self.button1 = QPushButton('Truen IP', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
-        self.button1.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+        self.button1.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
         self.button1.setGeometry(115, 10, 100, 50)
         self.button2 = QPushButton('Start', self)
         self.button2.clicked.connect(self.Start)
         self.button2.setFont(Font)
-        self.button2.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
-        self.button2.setGeometry(220, 10, 100, 50)
+        self.button2.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
+        self.button2.setGeometry(410, 10, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
-        self.button3 = QPushButton('Reset', self)
+        self.button3 = QPushButton('Save\nReset', self)
         self.button3.clicked.connect(self.ResetTable)
         self.button3.setFont(Font)
-        self.button3.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
-        self.button3.setGeometry(325, 10, 100, 50)
+        self.button3.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
+        self.button3.setGeometry(625, 10, 100, 50)
+        self.button4 = QPushButton('Stop', self)
+        self.button4.setGeometry(520,10,100,50)
+        self.button4.toggle()
+        self.button4.setFont(Font)
+        self.button4.clicked.connect(self.StopAlarm)
+        self.button4.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
 
         # 카메라
         # self.frm1 = QLabel(self)
@@ -101,23 +118,26 @@ class MainWindow(QMainWindow):
         # Table
         self.table = QTableWidget(self)
         self.table.setRowCount(100)
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용', '확인메모'])
+        self.table.setColumnCount(4)
+        self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용'])
         self.table.setFont(Font)
         self.table.setAlternatingRowColors(True)
         self.table.setColumnWidth(0, 140)
         self.table.setColumnWidth(1, 140)
         self.table.setColumnWidth(2, 130)
         self.table.setColumnWidth(3, 120)
-        self.table.setColumnWidth(4, 140)
-        self.table.setGeometry(10, 70, 721, 328)
+        self.table.setGeometry(10, 70, 580, 328)
         self.table.setStyleSheet("color: black;"
 	                             "background-color: white;"
-	                             "border: 2px solid rgb(255, 0, 0);"
-                                 "")
+	                             "border: 2px solid rgb(31,31,31);"
+                                 "border-radius: 8px;")
 
         # QDialog 설정
         self.dialog = QDialog()
+
+        p = QPalette()
+        p.setColor(QPalette.Background, QColor(255,255,255))
+        self.dialog.setPalette(p)
 
     # 버튼 이벤트 함수
     def Seyeon_IP_open(self):
@@ -157,6 +177,7 @@ class MainWindow(QMainWindow):
         Explain1 = QLabel('NAME                      IP                             ID                        '
                           'PASS', self.dialog)
         Explain1.setFont(myFont)
+        Explain1.setStyleSheet("color: black;")
         Explain1.move(22, 64)
 
         Button_Font = QtGui.QFont("Calibri", 11)
@@ -223,10 +244,21 @@ class MainWindow(QMainWindow):
         SaveB.move(170, 20)
         SaveB.setFont(myFont)
         SaveB.clicked.connect(lambda: self.Seyeon_Save_and_dialog_close(Name, NM, IP, ID, PS))
-        SaveB.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+        SaveB.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
         # StartB.clicked.connect(lambda: self.Start(Name, NM, IP, ID, PS, ST))
+        #######load버튼############
+        # LoadB = QPushButton('LOAD', self.dialog)
+        # LoadB.resize(100,26)
+        # LoadB.move(320,20)
+        # LoadB.setFont(myFont)
+        # LoadB.clicked.connect(lambda: self.Load_Seyeon(Name, NM, IP, ID, PS))
+        # LoadB.setStyleSheet("color: white;"
+        #                 "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+        #                 "border: 1px solid black;"
+        #                 "border-radius: 20px;")
 
         # btnDialog = QPushButton("OK", self.dialog)
         # btnDialog.move(100, 100)
@@ -234,7 +266,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('Seyeon')
-        self.dialog.setWindowIcon(QIcon('logo.png'))
+        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -273,13 +305,14 @@ class MainWindow(QMainWindow):
 
         myFont = QtGui.QFont("Calibri", 11)
         myFont.setBold(True)
-        Explain1 = QLabel('NAME                      IP                             ID                        '
-                          'PASS', self.dialog)
-        Explain1.setFont(myFont)
-        Explain1.move(22, 64)
+        # Explain1 = QLabel('NAME                      IP                             ID                        '
+        #                   'PASS', self.dialog)
+        # Explain1.setFont(myFont)
+        # Explain1.move(22, 64)
 
 
-        Button_Font = QtGui.QFont("Calibri", 10)
+
+        Button_Font = QtGui.QFont("Calibri", 11)
         Button_Font.setBold(True)
 
         try:
@@ -343,10 +376,21 @@ class MainWindow(QMainWindow):
         SaveB.move(170, 20)
         SaveB.setFont(myFont)
         SaveB.clicked.connect(lambda: self.Save_and_dialog_close(Name, NM, IP, ID, PS))
-        SaveB.setStyleSheet("color: White;"
-	                               "background-color: rgb(255, 0, 0);"
-	                               "border: 2px solid rgb(255, 0, 0);")
+        SaveB.setStyleSheet("color: white;"
+                        "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                        "border: 1px solid black;"
+                        "border-radius: 20px;")
         # StartB.clicked.connect(lambda: self.Start(Name, NM, IP, ID, PS, ST))
+        ##################load버튼##################
+        # LoadB = QPushButton('LOAD', self.dialog)
+        # LoadB.resize(100,26)
+        # LoadB.move(320,20)
+        # LoadB.setFont(myFont)
+        # LoadB.clicked.connect(lambda: self.Load_Name(Name, NM, IP, ID, PS))
+        # LoadB.setStyleSheet("color: white;"
+        #                 "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+        #                 "border: 1px solid black;"
+        #                 "border-radius: 20px;")
 
         # btnDialog = QPushButton("OK", self.dialog)
         # btnDialog.move(100, 100)
@@ -354,7 +398,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('Truen')
-        self.dialog.setWindowIcon(QIcon('logo.jpg'))
+        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -417,7 +461,7 @@ class MainWindow(QMainWindow):
             print(FILE[i + 1])
             print(FILE[i + 2])
             print(FILE[i + 3])
-            Truen_thread ="Truen_GetHttp_thread.exe "+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
+            Truen_thread ="Truen_GetHttp_thread.exe"+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
             subprocess.Popen(Truen_thread, shell=False)
             time.sleep(1)
             print('thread start')
@@ -460,7 +504,9 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-                arduino.write(b'y')
+                self.alarm_controll(red=2, sound=1)
+                time.sleep(2)
+                self.alarm_controll(red=0, sound=0)
             except:
                 pass
 
@@ -476,7 +522,7 @@ class MainWindow(QMainWindow):
         # 표에 데이터 삽입
         #print('table')
         #print(table_Count)
-        now = datetime.datetime.now()
+        now = datetime.now()
         nowDatetime = now.strftime('%m-%d %H:%M:%S')
         item1 = QTableWidgetItem(nowDatetime)
         item1.setTextAlignment(Qt.AlignCenter)
@@ -503,9 +549,8 @@ class MainWindow(QMainWindow):
         self.table.scrollTo(index)
         if table_Count > 99:
             table_Count = 0
-            #self.WriteCsv()
-            #self.ResetTable()
-            self.table
+            self.WriteCsv()
+            self.ResetTable()
         ##############################
     # Dialog 닫기 이벤트
 
@@ -514,8 +559,9 @@ class MainWindow(QMainWindow):
 
     def ResetTable(self):
         global table_Count
+        self.WriteCsv()
         self.table.clear()
-        self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용', '확인메모'])
+        self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용'])
         table_Count = 0
 
     def WriteCsv(self):
@@ -578,6 +624,51 @@ class MainWindow(QMainWindow):
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
+
+    def Load_Seyeon(self,Name, NM, IP, ID, PS):
+        dial = QFileDialog.getOpenFileNames(self, 'open file', '~')
+
+    def Load_Name(self,Name,NM,IP,ID,PS):
+        dial = QFileDialog.getOpenFileNames(self, 'open file', '~')
+
+        dial2 = QDialog()
+
+    def StopAlarm(self):
+        try:
+            os.system('taskkill /f /im Truen_GetHttp_thread.exe')
+            os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
+        except:
+            self.dial2.set('정지할 프로세스가 없습니다')
+
+
+    def ligth_status_check(self):
+        state = light_dll['Usb_Qu_Getstate']()
+        if state == 0x1:
+            return 0
+        elif state == 0x2:
+            return 1
+        elif state == 0x4:
+            return 2
+        elif state == 0x8:
+            return 3
+        else :
+            print("Not Connect Usb")
+        return
+
+    class ArrayStruct(Structure):
+        _fields_ = [("char_t", POINTER(c_char))]
+
+    def alarm_controll(self, red, yellow=0, green=0, blue=0, white=0, sound=0):
+        C_index = self.ligth_status_check()
+        C_type = 0
+
+        c_char_t = self.ArrayStruct()
+        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, 0) #
+        # c_char_t.char_t = (c_char * 6)(C_lampblink, C_lampoff, C_lampoff, C_lampoff, C_lampoff, 0)
+        Usb_Qu_write = light_dll['Usb_Qu_write'](C_index, C_type, c_char_t.char_t)
+        return Usb_Qu_write
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
