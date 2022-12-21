@@ -113,6 +113,7 @@ class MainWindow(QMainWindow):
         self.rad2 = QRadioButton('Sound OFF',self)
         self.rad2.move(600,180)
         self.rad2.setFont(Font)
+        self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.SoundOff)
 
         # 카메라
@@ -152,9 +153,9 @@ class MainWindow(QMainWindow):
 
     # 버튼 이벤트 함수
     def SoundOff(self):
-        print('wip')
+        self.alarm_controll(sound=0)
     def SoundOn(self):
-        print('wip')
+        self.alarm_controll(sound=1)
 
     def Seyeon_IP_open(self):
         # 버튼 추가
@@ -281,7 +282,7 @@ class MainWindow(QMainWindow):
         # btnDialog.clicked.connect(self.dialog_close)
 
         # QDialog 세팅
-        self.dialog.setWindowTitle('Seyeon')
+        self.dialog.setWindowTitle('9302/8020')
         self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
@@ -319,12 +320,13 @@ class MainWindow(QMainWindow):
             pass
         ###############################################
 
-        myFont = QtGui.QFont("Calibri", 11)
+        myFont = QtGui.QFont("Arial", 11)
         myFont.setBold(True)
-        # Explain1 = QLabel('NAME                      IP                             ID                        '
-        #                   'PASS', self.dialog)
-        # Explain1.setFont(myFont)
-        # Explain1.move(22, 64)
+
+        Explain1 = QLabel('NAME                      IP                             ID                        '
+                          'PASS', self.dialog)
+        Explain1.setFont(myFont)
+        Explain1.move(22, 64)
 
 
 
@@ -413,7 +415,7 @@ class MainWindow(QMainWindow):
         # btnDialog.clicked.connect(self.dialog_close)
 
         # QDialog 세팅
-        self.dialog.setWindowTitle('Truen')
+        self.dialog.setWindowTitle('3204')
         self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
