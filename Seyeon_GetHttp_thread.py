@@ -1,9 +1,11 @@
 #-*- encoding: utf-8 -*-
 
 from threading import Thread
+from requests.auth import HTTPDigestAuth
 
 import requests
-from requests.auth import HTTPDigestAuth
+import json
+import time
 
 NM = ['nm0','nm1','nm2','nm3','nm4','nm5','nm6','nm7','nm8','nm9','nm10','nm11','nm12','nm13','nm14','nm15']
 IP = ['IP0','IP1','IP2','IP3','IP4','IP5','IP6','IP7','IP8','IP9','IP10','IP11','IP12','IP13','IP14','IP15']
@@ -37,14 +39,15 @@ def IP_Checkable(IP, ID, PAS):
             try:
                 response = requests.get('http://' + IP[t] + '/cgi-bin/fwalarmstateget.cgi?FwModId=0&FwCgiVer=0x0001',
                                         auth=HTTPDigestAuth(ID[t], PAS[t]), timeout=1)
-                text = response.text
-                text = text[text.find('DO_STATE') + 9:text.find('DO_STATE') + 13]
+                target = '{"' + response.text.replace('\r\n', '\", \"').replace('=', '":"').rstrip(', "') + '"}'
+                js = json.loads(target)
             except:
                 continue
-            if text == '0x07':
+            if js['DO_STATE'] == '0x07' and js['FES_DATA1'] == '0x00000001':
                 f = open("./Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
-                f.write('Alarm')
+                f.write('Fire Alarm')
                 f.close()
+        time.sleep(0.5)
 
 if __name__ == '__main__':
     Read_file(IP_READ)
