@@ -43,7 +43,7 @@ def IP_Checkable(IP, ID, PAS):
                 continue
             if text == '0x07':
                 f = open("./Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
-                f.write('Alarm')
+                f.write('FES')
                 f.close()
 
 if __name__ == '__main__':
