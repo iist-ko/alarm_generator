@@ -325,12 +325,12 @@ class MainWindow(QMainWindow):
             pass
         ###############################################
 
-        myFont = QtGui.QFont("Calibri", 11)
+        myFont = QtGui.QFont("Arial", 11)
         myFont.setBold(True)
-        # Explain1 = QLabel('NAME                      IP                             ID                        '
-        #                   'PASS', self.dialog)
-        # Explain1.setFont(myFont)
-        # Explain1.move(22, 64)
+        Explain1 = QLabel('NAME                      IP                             ID                        '
+                          'PASS', self.dialog)
+        Explain1.setFont(myFont)
+        Explain1.move(22, 64)
 
 
 
@@ -526,9 +526,9 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-                # self.alarm_controll(red=2, sound=1)
-                self.showdialog()
-                # self.alarm_controll(red=0, sound=0)
+                self.alarm_controll(red=2, sound=1)
+                #self.showdialog()
+                self.alarm_controll(red=0, sound=0)
 
             except:
                 pass
