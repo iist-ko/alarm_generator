@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding: UTF-8
 import csv
-import datetime
+from datetime import datetime
 import threading
 import time
 import cv2
@@ -49,6 +49,8 @@ light_dll = WinDLL('./Ux64_dllc.dll')
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.soundCheck = 0
         # 윈도우 설정
         self.setGeometry(500, 250, 740, 410)  # x, y, w, h
         self.setWindowTitle('Alarm Viewer')
@@ -155,10 +157,12 @@ class MainWindow(QMainWindow):
         p.setColor(QPalette.Background, QColor(255,255,255))
         self.dialog.setPalette(p)
     def SoundOn(self):
-        self.alarm_controll(sound=1)
+        self.soundCheck = 1
+        print("on", self.soundCheck)
         #print('wip')
     def SoundOff(self):
-        self.alarm_controll(sound=0)
+        self.soundCheck = 0
+        print("off", self.soundCheck)
         #print('wip')
 
     # 버튼 이벤트 함수
@@ -425,6 +429,7 @@ class MainWindow(QMainWindow):
         self.dialog.resize(520, 500)
         self.dialog.show()
 
+
     def Seyeon_Read_file(self,FILE,Case):
         if Case == 'NAME':
             f = open("Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
@@ -483,7 +488,7 @@ class MainWindow(QMainWindow):
             print(FILE[i + 1])
             print(FILE[i + 2])
             print(FILE[i + 3])
-            Truen_thread ="Truen_GetHttp_thread.exe"+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
+            Truen_thread ="Truen_GetHttp_thread.exe"+" "+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
             subprocess.Popen(Truen_thread, shell=False)
             time.sleep(1)
             print('thread start')
@@ -526,9 +531,11 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-                # self.alarm_controll(red=2, sound=1)
-                self.showdialog()
-                # self.alarm_controll(red=0, sound=0)
+
+                self.alarm_controll(red=2, sound=self.soundCheck)
+                self.popUp_Event()
+                time.sleep(1.5)
+                self.alarm_controll(red=0, sound=0)
 
             except:
                 pass
@@ -603,28 +610,28 @@ class MainWindow(QMainWindow):
         table_Count = 0
 
     def WriteCsv(self):
-        Folder = "./ExcelData"
+        Folder = "./LogData"
         if not os.path.isdir(Folder):
             os.mkdir(Folder)
-        now = datetime.datetime.now()
+        now = datetime.now()
         Nowtime = now.strftime('%m%d_%H_%M_%S')
-        path = "./ExcelData/"+"Alarm_Data_"+Nowtime+".csv"
+        path = "./LogData/"+"Alarm_Data_"+Nowtime+".txt"
         print("saving", path)
 
-        f = open(path, 'w', newline='')
+        writer = open(path, 'w', newline='')
 
-        writer = csv.writer(f)
+        txt = ""
         for row in range(self.table.rowCount()):
-            rowdata = []
             for column in range(self.table.columnCount()):
                 item = self.table.item(row, column)
                 if item is not None:
-                    rowdata.append(item.text())
+                    txt += item.text() + " "
                 else:
-                    rowdata.append('')
-            writer.writerow(rowdata)
+                    txt += ''
+            txt += '\n'
+        writer.write(txt)
         self.isChanged = False
-        f.close()
+        writer.close()
 
     ########################################################
     def Seyeon_Save_and_dialog_close(self,NAME, NM, IP, ID, PAS):
@@ -701,7 +708,7 @@ class MainWindow(QMainWindow):
         C_type = 0
 
         c_char_t = self.ArrayStruct()
-        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, 0) #
+        c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, sound) #
         # c_char_t.char_t = (c_char * 6)(C_lampblink, C_lampoff, C_lampoff, C_lampoff, C_lampoff, 0)
         Usb_Qu_write = light_dll['Usb_Qu_write'](C_index, C_type, c_char_t.char_t)
         return Usb_Qu_write
