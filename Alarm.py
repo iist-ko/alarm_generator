@@ -51,10 +51,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         # 윈도우 설정
         self.setGeometry(500, 250, 740, 410)  # x, y, w, h
-        self.setWindowTitle('Alarm status')
+        self.setWindowTitle('Alarm Viewer')
 
         # QButton 위젯 생성
-        Font = QtGui.QFont("Calibri", 11)
+        Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
         
         self.setWindowIcon(QIcon('logo2.jpg'))
@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         p.setColor(QPalette.Background,QColor(255,255,255))
         self.setPalette(p)
         
-        self.button0 = QPushButton('9302/8020 IP', self)
+        self.button0 = QPushButton('9302/8020 등록', self)
         self.button0.clicked.connect(self.Seyeon_IP_open)
         self.button0.setFont(Font)
         self.button0.setStyleSheet("color: white;"
@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
-        self.button1 = QPushButton('3204 IP', self)
+        self.button1 = QPushButton('3204 등록', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
         self.button1.setStyleSheet("color: white;"
@@ -526,11 +526,10 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-                self.alarm_controll(red=2, sound=1)
-                self.showdialog(True)
-                time.sleep(2)
-                self.alarm_controll(red=0, sound=0)
-                self.showdialog(False)
+                # self.alarm_controll(red=2, sound=1)
+                self.showdialog()
+                # self.alarm_controll(red=0, sound=0)
+
             except:
                 pass
 
@@ -541,15 +540,16 @@ class MainWindow(QMainWindow):
         #QTimer.singleShot(1000, self.table.show())
         threading.Timer(4,self.detection_checking).start()
     def showdialog(self):
-        while True:
-            self.dialog2.setWindowTitle('Alarm Popup')
-            self.dialog2.setWindowIcon('logo2.jpg')
-            self.dialog2.setWindowModality(Qt.ApplicationModal)
-            self.dialog2.resize(520, 500)
-            log = QLabel('IP', self.dialog2)
-            log.move(170,20)
-        while False:
-            self.dialog2.close()
+
+        self.dialog2.setWindowTitle('Alarm Popup')
+        self.dialog2.setWindowIcon(QIcon('logo2.jpg'))
+        # self.dialog2.setWindowModality(Qt.ApplicationModal)
+        self.dialog2.resize(520, 500)
+        log = QLabel('IP', self.dialog2)
+        log.move(170,20)
+        self.dialog2.show()
+        time.sleep(2)
+        self.dialog2.close()
 
 
 
