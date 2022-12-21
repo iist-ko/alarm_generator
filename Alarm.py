@@ -4,6 +4,9 @@ import csv
 import datetime
 import threading
 import time
+import cv2
+
+
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import *
@@ -60,7 +63,7 @@ class MainWindow(QMainWindow):
         p.setColor(QPalette.Background,QColor(255,255,255))
         self.setPalette(p)
         
-        self.button0 = QPushButton('Seyeon IP', self)
+        self.button0 = QPushButton('9302/8020 IP', self)
         self.button0.clicked.connect(self.Seyeon_IP_open)
         self.button0.setFont(Font)
         self.button0.setStyleSheet("color: white;"
@@ -68,7 +71,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
-        self.button1 = QPushButton('Truen IP', self)
+        self.button1 = QPushButton('3204 IP', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
         self.button1.setStyleSheet("color: white;"
@@ -146,6 +149,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 설정
         self.dialog = QDialog()
+        self.dialog2 = QDialog()
 
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255,255,255))
@@ -283,7 +287,7 @@ class MainWindow(QMainWindow):
         # btnDialog.clicked.connect(self.dialog_close)
 
         # QDialog 세팅
-        self.dialog.setWindowTitle('Seyeon')
+        self.dialog.setWindowTitle('9302/8020')
         self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
@@ -415,7 +419,7 @@ class MainWindow(QMainWindow):
         # btnDialog.clicked.connect(self.dialog_close)
 
         # QDialog 세팅
-        self.dialog.setWindowTitle('Truen')
+        self.dialog.setWindowTitle('X3204')
         self.dialog.setWindowIcon(QIcon('logo2.jpg'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
@@ -523,8 +527,10 @@ class MainWindow(QMainWindow):
             self.Write_Table(nm, nm2, Object=object)
             try:
                 self.alarm_controll(red=2, sound=1)
+                self.showdialog(True)
                 time.sleep(2)
                 self.alarm_controll(red=0, sound=0)
+                self.showdialog(False)
             except:
                 pass
 
@@ -534,6 +540,20 @@ class MainWindow(QMainWindow):
                 pass
         #QTimer.singleShot(1000, self.table.show())
         threading.Timer(4,self.detection_checking).start()
+    def showdialog(self):
+        while True:
+            self.dialog2.setWindowTitle('Alarm Popup')
+            self.dialog2.setWindowIcon('logo2.jpg')
+            self.dialog2.setWindowModality(Qt.ApplicationModal)
+            self.dialog2.resize(520, 500)
+            log = QLabel('IP', self.dialog2)
+            log.move(170,20)
+        while False:
+            self.dialog2.close()
+
+
+
+
 
     def Write_Table(self,name,Ip,Object):
         global table_Count
