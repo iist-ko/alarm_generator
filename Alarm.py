@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
         
-        self.setWindowIcon(QIcon('logo2.jpg'))
+        self.setWindowIcon(QIcon('logo2.png'))
 
         p = QPalette()
         p.setColor(QPalette.Background,QColor(255,255,255))
@@ -288,7 +288,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('9302/8020')
-        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
+        self.dialog.setWindowIcon(QIcon('logo2.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -420,7 +420,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('X3204')
-        self.dialog.setWindowIcon(QIcon('logo2.jpg'))
+        self.dialog.setWindowIcon(QIcon('logo2.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.resize(520, 500)
         self.dialog.show()
@@ -542,7 +542,7 @@ class MainWindow(QMainWindow):
     def showdialog(self):
 
         self.dialog2.setWindowTitle('Alarm Popup')
-        self.dialog2.setWindowIcon(QIcon('logo2.jpg'))
+        self.dialog2.setWindowIcon(QIcon('logo2.png'))
         # self.dialog2.setWindowModality(Qt.ApplicationModal)
         self.dialog2.resize(520, 500)
         log = QLabel('IP', self.dialog2)
