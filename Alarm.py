@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button1.setGeometry(115, 10, 100, 50)
-        self.button2 = QPushButton('Start', self)
+        self.button2 = QPushButton('시작', self)
         self.button2.clicked.connect(self.Start)
         self.button2.setFont(Font)
         self.button2.setStyleSheet("color: white;"
@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.button2.setGeometry(410, 10, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
-        self.button3 = QPushButton('Save\nReset', self)
+        self.button3 = QPushButton('저장 후 리셋', self)
         self.button3.clicked.connect(self.ResetTable)
         self.button3.setFont(Font)
         self.button3.setStyleSheet("color: white;"
@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button3.setGeometry(625, 10, 100, 50)
-        self.button4 = QPushButton('Stop', self)
+        self.button4 = QPushButton('정지', self)
         self.button4.setGeometry(520,10,100,50)
         self.button4.toggle()
         self.button4.setFont(Font)
