@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 #coding: UTF-8
-import csv
+
 from datetime import datetime
 import threading
 import time
-
-
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import *
@@ -15,13 +13,6 @@ from scapy.all import *
 from serial import Serial
 from ctypes import *
 
-try:
-    arduino = Serial('COM3', 9600)
-except:
-    try : arduino = Serial('COM4', 9600)
-    except :
-        try : arduino = Serial('COM5', 9600)
-        except : pass
 
 global table_Count
 table_Count = 0
@@ -50,6 +41,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.soundCheck = 0
+        self.event = threading.Event()
         # 윈도우 설정
         self.setGeometry(500, 250, 740, 410)  # x, y, w, h
         self.setWindowTitle('Alarm Viewer')
@@ -98,6 +90,7 @@ class MainWindow(QMainWindow):
                         "border: 1px solid black;"
                         "border-radius: 20px;")
         self.button3.setGeometry(625, 10, 100, 50)
+
         self.button4 = QPushButton('Stop', self)
         self.button4.setGeometry(520,10,100,50)
         self.button4.toggle()
@@ -107,6 +100,8 @@ class MainWindow(QMainWindow):
                         "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                         "border: 1px solid black;"
                         "border-radius: 20px;")
+        self.button4.setDisabled(True)
+
         self.Alarm = QLabel('Alarm Option',self)
         self.Alarm.move(600,120)
         self.Alarm.setFont(Font)
@@ -446,12 +441,12 @@ class MainWindow(QMainWindow):
 
     def Read_file(self,FILE,Case):
         if Case == 'NAME' :
-            f = open("NAME_Save.txt", 'r', encoding='UTF8')
+            f = open("Truen_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP' :
-            f = open("IP_Save.txt", 'r', encoding='UTF8')
+            f = open("Truen_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
@@ -465,13 +460,12 @@ class MainWindow(QMainWindow):
             os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
         except:
             print('실행')
-
         print('start')
         t = 0
         k = 0
         ### IP 등등 넣어야함 ###
         FILE = []
-        f = open("IP_Save.txt", 'r', encoding='UTF8')
+        f = open("Truen_IP_Save.txt", 'r', encoding='UTF8')
         lines = f.readlines()
         for line in lines:
             line = line.replace('\n', '')
@@ -479,19 +473,10 @@ class MainWindow(QMainWindow):
         f.close()
         #print('1')
         ### Truen 프로토콜 실행 ###
-        for i in range(0, len(FILE), 4):
-            if FILE[i] == '' or FILE[i] == '':
-                print('pass')
-                continue
-            print(FILE[i])
-            print(FILE[i + 1])
-            print(FILE[i + 2])
-            print(FILE[i + 3])
-            Truen_thread ="Truen_GetHttp_thread.exe"+" "+FILE[i]+" "+FILE[i+1]+" "+FILE[i+2]+" "+FILE[i+3]
-            subprocess.Popen(Truen_thread, shell=False)
-            time.sleep(1)
-            print('thread start')
-        print('thread end')
+        subprocess.Popen("Truen_GetHttp_thread.exe", shell=True)
+        time.sleep(1)
+        print('Truen thread start')
+
         ######
         FILE_Seyeon = []
         f2 = open("Seyeon_IP_Save.txt", 'r', encoding='UTF8')
@@ -500,7 +485,6 @@ class MainWindow(QMainWindow):
             line = line.replace('\n', '')
             FILE_Seyeon.append(line)
         f2.close()
-        print('1')
         # ### Seyeon 프로토콜 실행 ###
         # try:
         #     os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
@@ -509,11 +493,13 @@ class MainWindow(QMainWindow):
 
         subprocess.Popen('Seyeon_GetHttp_thread.exe', shell=True)
         ###### 210 220 163 81
-
+        self.event = threading.Event()
+        self.button2.setDisabled(True)
+        self.button4.setEnabled(True)
         self.detection_checking()
 
     def detection_checking(self):
-        print('kk')
+        print('searching . . .')
         filenames = os.listdir("Detection")
         for filename in filenames:
             full_filename = os.path.join("Detection", filename)
@@ -530,19 +516,18 @@ class MainWindow(QMainWindow):
             #print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-
                 self.alarm_controll(red=2, sound=self.soundCheck)
-                self.popUp_Event()
-                time.sleep(1.5)
+                time.sleep(2)
                 self.alarm_controll(red=0, sound=0)
-
             except:
                 pass
-
             try :
                 os.remove(full_filename)
             except :
                 pass
+        if self.event.is_set():
+            print("stop!")
+            return
         #QTimer.singleShot(1000, self.table.show())
         threading.Timer(4,self.detection_checking).start()
     def showdialog(self):
@@ -646,7 +631,7 @@ class MainWindow(QMainWindow):
             f.write(ID[i].text() + '\n')
             f.write(PAS[i].text() + '\n')
         f.close()
-        #f = open("IP.txt",'w',encoding='UTF8')
+        #f = open("Truen_IP.txt",'w',encoding='UTF8')
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
@@ -657,14 +642,14 @@ class MainWindow(QMainWindow):
         f.write(NAME.text())
         f.close()
 
-        f = open("IP_Save.txt", 'w', encoding='UTF8')
+        f = open("Truen_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(NM[i].text() + '\n')
             f.write(IP[i].text() + '\n')
             f.write(ID[i].text() + '\n')
             f.write(PAS[i].text() + '\n')
         f.close()
-        f = open("IP.txt",'w',encoding='UTF8')
+        f = open("Truen_IP.txt",'w',encoding='UTF8')
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
@@ -681,6 +666,10 @@ class MainWindow(QMainWindow):
         try:
             os.system('taskkill /f /im Truen_GetHttp_thread.exe')
             os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
+            self.event.set()
+            self.button2.setEnabled(True)
+            self.button4.setDisabled(True)
+            self.alarm_controll(red=0, sound=0)
         except:
             self.dial2.set('정지할 프로세스가 없습니다')
 
