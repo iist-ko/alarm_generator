@@ -42,12 +42,13 @@ def IP_Checkable(IP, ID, PAS):
                 target = '{"' + response.text.replace('\r\n', '\", \"').replace('=', '":"').rstrip(', "') + '"}'
                 js = json.loads(target)
             except:
+                print(IP[t]," error")
                 continue
             if js['DO_STATE'] == '0x07' and js['FES_DATA1'] == '0x00000001':
                 f = open("./Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
                 f.write('Fire Alarm')
                 f.close()
-        time.sleep(0.5)
+        time.sleep(2)
 
 if __name__ == '__main__':
     Read_file(IP_READ)
