@@ -6,6 +6,9 @@ from requests.auth import HTTPDigestAuth
 import requests
 import json
 import time
+import os
+
+alarm = os.getcwd()
 
 NM = ['nm0','nm1','nm2','nm3','nm4','nm5','nm6','nm7','nm8','nm9','nm10','nm11','nm12','nm13','nm14','nm15']
 IP = ['IP0','IP1','IP2','IP3','IP4','IP5','IP6','IP7','IP8','IP9','IP10','IP11','IP12','IP13','IP14','IP15']
@@ -51,12 +54,13 @@ def IP_Checkable(IP, ID, PAS):
                 IP[t], ID[t], PAS[t] = '', '', ''
                 continue
             if js['GIS_ALARM1'] == '1':
-                f = open("../Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
+                f = open(alarm+"/Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
                 f.write('Fire Alarm')
                 f.close()
         time.sleep(2)
 
 if __name__ == '__main__':
+    print("Truen Fire Search")
     Read_file(IP_READ)
     k = 0
     for i in range(0, 16):
