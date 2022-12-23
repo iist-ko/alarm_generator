@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
-import threading
-import time
+from ctypes import *
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from scapy.all import *
-from serial import Serial
-from ctypes import *
-
-
 
 global table_Count
 table_Count = 0
@@ -33,9 +27,7 @@ try:
 except:
     pass
 
-
-    light_dll = WinDLL('./Ux64_dllc.dll')
-
+light_dll = WinDLL('./lib/Ux64_dllc.dll')
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -54,7 +46,7 @@ class MainWindow(QMainWindow):
         Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
 
-        self.setWindowIcon(QIcon('exelogo_inv.png'))
+        self.setWindowIcon(QIcon('./img/exelogo_inv.png'))
 
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255, 255, 255))
@@ -68,6 +60,7 @@ class MainWindow(QMainWindow):
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
+
         self.button1 = QPushButton('3204 등록', self)
         self.button1.clicked.connect(self.IP_open)
         self.button1.setFont(Font)
@@ -76,6 +69,7 @@ class MainWindow(QMainWindow):
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
         self.button1.setGeometry(115, 10, 100, 50)
+
         self.button2 = QPushButton('시작', self)
         self.button2.clicked.connect(self.Start)
         self.button2.setFont(Font)
@@ -86,6 +80,7 @@ class MainWindow(QMainWindow):
         self.button2.setGeometry(410, 10, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
+
         self.button3 = QPushButton('저장 후 리셋', self)
         self.button3.clicked.connect(self.ResetTable)
         self.button3.setFont(Font)
@@ -94,6 +89,7 @@ class MainWindow(QMainWindow):
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
         self.button3.setGeometry(625, 10, 100, 50)
+
         self.button4 = QPushButton('정지', self)
         self.button4.setGeometry(520, 10, 100, 50)
 
@@ -104,10 +100,12 @@ class MainWindow(QMainWindow):
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
+        self.button4.setDisabled(True)
+
         self.Alarm = QLabel('Alarm Option', self)
         self.Alarm.move(600, 120)
-
         self.Alarm.setFont(Font)
+
         self.rad1 = QRadioButton('Sound ON', self)
         self.rad1.move(600, 150)
         self.rad1.setFont(Font)
@@ -173,13 +171,9 @@ class MainWindow(QMainWindow):
         self.Status.setStyleSheet("color:red;")
     def SoundOn(self):
         self.soundCheck = 1
-        print("on", self.soundCheck)
 
-        #print('wip')
     def SoundOff(self):
         self.soundCheck = 0
-        print("off", self.soundCheck)
-        #print('wip')
 
     # 버튼 이벤트 함수
     def Seyeon_IP_open(self):
@@ -202,7 +196,6 @@ class MainWindow(QMainWindow):
         try:
             self.Seyeon_Read_file(NAME_Read, 'NAME')
 
-            # print(NAME_Read)
         except:
             pass
         ###############################################
@@ -308,7 +301,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('9302/8020')
-        self.dialog.setWindowIcon(QIcon('exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon('./img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
@@ -333,7 +326,6 @@ class MainWindow(QMainWindow):
         try:
             self.Read_file(NAME_Read, 'NAME')
 
-            # print(NAME_Read)
         except:
             pass
         ###############################################
@@ -438,7 +430,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('X3204')
-        self.dialog.setWindowIcon(QIcon('exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon('./img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
@@ -446,33 +438,31 @@ class MainWindow(QMainWindow):
     def Seyeon_Read_file(self, FILE, Case):
 
         if Case == 'NAME':
-            f = open("Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
+            f = open("./config/Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP':
-            f = open("Seyeon_IP_Save.txt", 'r', encoding='UTF8')
+            f = open("./config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
                 FILE.append(line)
-            # print(FILE)
             f.close()
 
 
     def Read_file(self,FILE,Case):
         if Case == 'NAME' :
-            f = open("Truen_NAME_Save.txt", 'r', encoding='UTF8')
+            f = open("./config/Truen_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP' :
-            f = open("Truen_IP_Save.txt", 'r', encoding='UTF8')
+            f = open("./config/Truen_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
                 FILE.append(line)
-            # print(FILE)
             f.close()
 
     def Start(self):
@@ -480,41 +470,19 @@ class MainWindow(QMainWindow):
             os.system('taskkill /f /im Truen_GetHttp_thread.exe')
             os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
         except:
-            print('실행')
-        print('start')
-        t = 0
-        k = 0
-        ### IP 등등 넣어야함 ###
-        FILE = []
-        f = open("Truen_IP_Save.txt", 'r', encoding='UTF8')
-        lines = f.readlines()
-        for line in lines:
-            line = line.replace('\n', '')
-            FILE.append(line)
-        f.close()
-        # print('1')
+            print("Not process")
+
         ### Truen 프로토콜 실행 ###
 
-        subprocess.Popen("Truen_GetHttp_thread.exe", shell=True)
+        subprocess.Popen("./Thread/Truen_GetHttp_thread.exe", shell=True)
         time.sleep(1)
-        print('Truen thread start')
+        print('Truen IP search start')
 
-        ######
-        FILE_Seyeon = []
-        f2 = open("Seyeon_IP_Save.txt", 'r', encoding='UTF8')
-        lines = f2.readlines()
-        for line in lines:
-            line = line.replace('\n', '')
-            FILE_Seyeon.append(line)
-        f2.close()
         # ### Seyeon 프로토콜 실행 ###
-        # try:
-        #     os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
-        # except:
-        #     print('정지할 프로세스가 없습니다')
 
-        subprocess.Popen('Seyeon_GetHttp_thread.exe', shell=True)
-        ###### 210 220 163 81
+        subprocess.Popen('./Thread/Seyeon_GetHttp_thread.exe', shell=True)
+        print('Seyeon IP search start')
+
         self.event = threading.Event()
         self.button2.setDisabled(True)
         self.button4.setEnabled(True)
@@ -529,16 +497,11 @@ class MainWindow(QMainWindow):
             nm = full_filename[10:full_filename.find('_')]
             # IP#
             nm2 = full_filename[full_filename.find('192.'):full_filename.find('.txt')]
-            # print(nm)
-            # print(nm2)
             f = open(full_filename, 'r', encoding='UTF8')
             object = f.read()
             f.close()
-            # print(full_filename)
-            # print(object)
             self.Write_Table(nm, nm2, Object=object)
             try:
-
                 self.alarm_controll(red=2, sound=self.soundCheck)
                 time.sleep(2)
                 self.alarm_controll(red=0, sound=0)
@@ -550,7 +513,6 @@ class MainWindow(QMainWindow):
                 pass
 
         if self.event.is_set():
-            print("stop!")
             return
         #QTimer.singleShot(1000, self.table.show())
         threading.Timer(4,self.detection_checking).start()
@@ -558,7 +520,7 @@ class MainWindow(QMainWindow):
     def showdialog(self):
 
         self.dialog2.setWindowTitle('Alarm Popup')
-        self.dialog2.setWindowIcon(QIcon('exelogo_inv.png'))
+        self.dialog2.setWindowIcon(QIcon('./img/exelogo_inv.png'))
         # self.dialog2.setWindowModality(Qt.ApplicationModal)
         self.dialog2.resize(520, 500)
         log = QLabel('IP', self.dialog2)
@@ -570,52 +532,43 @@ class MainWindow(QMainWindow):
     def Write_Table(self, name, Ip, Object):
         global table_Count
         # 표에 데이터 삽입
-        # print('table')
-        # print(table_Count)
         now = datetime.now()
         nowDatetime = now.strftime('%m-%d %H:%M:%S')
+
         item1 = QTableWidgetItem(nowDatetime)
         item1.setTextAlignment(Qt.AlignCenter)
         self.table.setItem(table_Count, 0, item1)
-        # print('table2')
+
         item2 = QTableWidgetItem(name)
         item2.setTextAlignment(Qt.AlignCenter)
         self.table.setItem(table_Count, 1, item2)
-        # print('table3')
+
         item3 = QTableWidgetItem(Ip)
         item3.setTextAlignment(Qt.AlignCenter)
         self.table.setItem(table_Count, 2, item3)
-        # print('table4')
+
         item4 = QTableWidgetItem(Object)
         item4.setTextAlignment(Qt.AlignCenter)
         self.table.setItem(table_Count, 3, item4)
         table_Count += 1
-        #######update#######
-        # print('update')
-        # self.table.repaint()
+
         self.table.reset()
-        ####################
+
         index = self.table.model().index(table_Count, 0)
         self.table.scrollTo(index)
         if table_Count > 99:
             table_Count = 0
-            self.WriteCsv()
+            self.WriteTxT()
             self.ResetTable()
-        ##############################
-
-    # Dialog 닫기 이벤트
-
-    ########################################################
-    # get http
 
     def ResetTable(self):
         global table_Count
-        self.WriteCsv()
+        self.WriteTxT()
         self.table.clear()
         self.table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용'])
         table_Count = 0
 
-    def WriteCsv(self):
+    def WriteTxT(self):
         Folder = "./LogData"
         if not os.path.isdir(Folder):
             os.mkdir(Folder)
@@ -644,11 +597,11 @@ class MainWindow(QMainWindow):
     ########################################################
     def Seyeon_Save_and_dialog_close(self, NAME, NM, IP, ID, PAS):
 
-        f = open("Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
+        f = open("./config/Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
         f.write(NAME.text())
         f.close()
 
-        f = open("Seyeon_IP_Save.txt", 'w', encoding='UTF8')
+        f = open("./config/Seyeon_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(NM[i].text() + '\n')
             f.write(IP[i].text() + '\n')
@@ -656,26 +609,22 @@ class MainWindow(QMainWindow):
             f.write(PAS[i].text() + '\n')
         f.close()
 
-        #f = open("Truen_IP.txt",'w',encoding='UTF8')
-        
-        # for i in range(0,16):
-        #     f.write(IP[i].text() + '\n')
         self.dialog.close()
 
     def Save_and_dialog_close(self, NAME, NM, IP, ID, PAS):
 
-        f = open("NAME_Save.txt", 'w', encoding='UTF8')
+        f = open("./config/NAME_Save.txt", 'w', encoding='UTF8')
         f.write(NAME.text())
         f.close()
 
-        f = open("Truen_IP_Save.txt", 'w', encoding='UTF8')
+        f = open("./config/Truen_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(NM[i].text() + '\n')
             f.write(IP[i].text() + '\n')
             f.write(ID[i].text() + '\n')
             f.write(PAS[i].text() + '\n')
         f.close()
-        f = open("Truen_IP.txt",'w',encoding='UTF8')
+        f = open("./config/Truen_IP.txt",'w',encoding='UTF8')
         # for i in range(0,16):
         #     f.write(IP[i].text() + '\n')
         self.dialog.close()
@@ -697,7 +646,7 @@ class MainWindow(QMainWindow):
             self.button4.setDisabled(True)
             self.alarm_controll(red=0, sound=0)
         except:
-            self.dial2.set('정지할 프로세스가 없습니다')
+            print('정지할 프로세스가 없습니다')
 
     def ligth_status_check(self):
         state = light_dll['Usb_Qu_Getstate']()
@@ -722,7 +671,6 @@ class MainWindow(QMainWindow):
 
         c_char_t = self.ArrayStruct()
         c_char_t.char_t = (c_char * 6)(red, yellow, green, blue, white, sound)
-        # c_char_t.char_t = (c_char * 6)(C_lampblink, C_lampoff, C_lampoff, C_lampoff, C_lampoff, 0)
         Usb_Qu_write = light_dll['Usb_Qu_write'](C_index, C_type, c_char_t.char_t)
         return Usb_Qu_write
 
