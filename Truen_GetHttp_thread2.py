@@ -19,8 +19,9 @@ IP_READ=[]
 testID = 'admin'
 testPWD = 'root'
 
+
 def Read_file(FILE):
-    f = open("Truen_IP_Save.txt", 'r', encoding='UTF8')
+    f = open("./config/Truen_IP_Save.txt", 'r', encoding='UTF8')
     lines = f.readlines()
     for line in lines:
         line = line.replace('\n', '')
@@ -47,9 +48,10 @@ def IP_Checkable(IP, ID, PAS):
                 js = json.loads(target)
             except:
                 print(IP[t]," error")
+                IP[t], ID[t], PAS[t] = '', '', ''
                 continue
             if js['GIS_ALARM1'] == '1':
-                f = open("./Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
+                f = open("../Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
                 f.write('Fire Alarm')
                 f.close()
         time.sleep(2)
@@ -64,7 +66,4 @@ if __name__ == '__main__':
         PS[i] = IP_READ[k + 3]
         k += 4
         #print('k')
-    print(IP)
-    print(ID)
-    print(PS)
     IP_Start(IP=IP,ID=ID,PAS=PS)
