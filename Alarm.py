@@ -51,13 +51,14 @@ class MainWindow(QMainWindow):
         super().__init__()
         # 윈도우 설정
         self.setGeometry(500, 250, 740, 410)  # x, y, w, h
+        self.setFixedSize(740, 410)
         self.setWindowTitle('Alarm Viewer')
 
         # QButton 위젯 생성
         Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
         
-        self.setWindowIcon(QIcon('logo2.png'))
+        self.setWindowIcon(QIcon('exelogo_inv.png'))
 
         p = QPalette()
         p.setColor(QPalette.Background,QColor(255,255,255))
@@ -288,9 +289,9 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('9302/8020')
-        self.dialog.setWindowIcon(QIcon('logo2.png'))
+        self.dialog.setWindowIcon(QIcon('exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
-        self.dialog.resize(520, 500)
+        self.dialog.setFixedSize(520, 500)
         self.dialog.show()
 
     def IP_open(self):
@@ -420,9 +421,9 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('X3204')
-        self.dialog.setWindowIcon(QIcon('logo2.png'))
+        self.dialog.setWindowIcon(QIcon('exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
-        self.dialog.resize(520, 500)
+        self.dialog.setFixedSize(520, 500)
         self.dialog.show()
 
     def Seyeon_Read_file(self,FILE,Case):
@@ -542,7 +543,7 @@ class MainWindow(QMainWindow):
     def showdialog(self):
 
         self.dialog2.setWindowTitle('Alarm Popup')
-        self.dialog2.setWindowIcon(QIcon('logo2.png'))
+        self.dialog2.setWindowIcon(QIcon('exelogo_inv.png'))
         # self.dialog2.setWindowModality(Qt.ApplicationModal)
         self.dialog2.resize(520, 500)
         log = QLabel('IP', self.dialog2)
