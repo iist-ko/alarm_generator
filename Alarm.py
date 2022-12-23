@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 
 from ctypes import *
 
@@ -10,7 +11,7 @@ from scapy.all import *
 
 global table_Count
 table_Count = 0
-
+pwd = os.getcwd()
 protocols = {1: 'ICMP', 6: 'TCP', 17: 'UDP'}
 try:
     os.mkdir('./Detection')
@@ -27,7 +28,7 @@ try:
 except:
     pass
 
-light_dll = WinDLL('./lib/Ux64_dllc.dll')
+light_dll = WinDLL(pwd+'/lib/Ux64_dllc.dll')
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
 
-        self.setWindowIcon(QIcon('./img/exelogo_inv.png'))
+        self.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
 
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255, 255, 255))
@@ -301,7 +302,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('9302/8020')
-        self.dialog.setWindowIcon(QIcon('./img/exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
@@ -430,7 +431,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('X3204')
-        self.dialog.setWindowIcon(QIcon('./img/exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
@@ -438,12 +439,12 @@ class MainWindow(QMainWindow):
     def Seyeon_Read_file(self, FILE, Case):
 
         if Case == 'NAME':
-            f = open("./config/Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd+"/config/Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP':
-            f = open("./config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd+"/config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
@@ -453,12 +454,12 @@ class MainWindow(QMainWindow):
 
     def Read_file(self,FILE,Case):
         if Case == 'NAME' :
-            f = open("./config/Truen_NAME_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd+"/config/Truen_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP' :
-            f = open("./config/Truen_IP_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd+"/config/Truen_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
@@ -474,13 +475,13 @@ class MainWindow(QMainWindow):
 
         ### Truen 프로토콜 실행 ###
 
-        subprocess.Popen("./Thread/Truen_GetHttp_thread.exe", shell=True)
+        subprocess.Popen(pwd+"/Thread/Truen_GetHttp_thread.exe", shell=True)
         time.sleep(1)
         print('Truen IP search start')
 
         # ### Seyeon 프로토콜 실행 ###
 
-        subprocess.Popen('./Thread/Seyeon_GetHttp_thread.exe', shell=True)
+        subprocess.Popen(pwd+'/Thread/Seyeon_GetHttp_thread.exe', shell=True)
         print('Seyeon IP search start')
 
         self.event = threading.Event()
@@ -520,7 +521,7 @@ class MainWindow(QMainWindow):
     def showdialog(self):
 
         self.dialog2.setWindowTitle('Alarm Popup')
-        self.dialog2.setWindowIcon(QIcon('./img/exelogo_inv.png'))
+        self.dialog2.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
         # self.dialog2.setWindowModality(Qt.ApplicationModal)
         self.dialog2.resize(520, 500)
         log = QLabel('IP', self.dialog2)
@@ -569,13 +570,13 @@ class MainWindow(QMainWindow):
         table_Count = 0
 
     def WriteTxT(self):
-        Folder = "./LogData"
+        Folder = pwd+"/LogData"
         if not os.path.isdir(Folder):
             os.mkdir(Folder)
         now = datetime.now()
         Nowtime = now.strftime('%m%d_%H_%M_%S')
         
-        path = "./LogData/" + "Alarm_Data_" + Nowtime + ".txt"
+        path = pwd+"/LogData/" + "Alarm_Data_" + Nowtime + ".txt"
 
         print("saving", path)
 
@@ -597,11 +598,11 @@ class MainWindow(QMainWindow):
     ########################################################
     def Seyeon_Save_and_dialog_close(self, NAME, NM, IP, ID, PAS):
 
-        f = open("./config/Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd+"/config/Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
         f.write(NAME.text())
         f.close()
 
-        f = open("./config/Seyeon_IP_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd+"/config/Seyeon_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(NM[i].text() + '\n')
             f.write(IP[i].text() + '\n')
@@ -613,20 +614,17 @@ class MainWindow(QMainWindow):
 
     def Save_and_dialog_close(self, NAME, NM, IP, ID, PAS):
 
-        f = open("./config/NAME_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd+"/config/Truen_NAME_Save.txt", 'w', encoding='UTF8')
         f.write(NAME.text())
         f.close()
 
-        f = open("./config/Truen_IP_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd+"/config/Truen_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(NM[i].text() + '\n')
             f.write(IP[i].text() + '\n')
             f.write(ID[i].text() + '\n')
             f.write(PAS[i].text() + '\n')
         f.close()
-        f = open("./config/Truen_IP.txt",'w',encoding='UTF8')
-        # for i in range(0,16):
-        #     f.write(IP[i].text() + '\n')
         self.dialog.close()
 
     def Load_Seyeon(self, Name, NM, IP, ID, PS):
