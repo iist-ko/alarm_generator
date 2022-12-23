@@ -17,7 +17,7 @@ PS = ['PS0', 'PS1', 'PS2', 'PS3', 'PS4', 'PS5', 'PS6', 'PS7', 'PS8', 'PS9', 'PS1
 IP_READ=[]
 
 def Read_file(FILE):
-    f = open("Seyeon_IP_Save.txt", 'r', encoding='UTF8')
+    f = open("./config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
     lines = f.readlines()
     for line in lines:
         line = line.replace('\n', '')
@@ -45,7 +45,7 @@ def IP_Checkable(IP, ID, PAS):
                 print(IP[t]," error")
                 continue
             if js['DO_STATE'] == '0x07' and js['FES_DATA1'] == '0x00000001':
-                f = open("./Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
+                f = open("../Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
                 f.write('Fire Alarm')
                 f.close()
         time.sleep(2)
@@ -59,8 +59,4 @@ if __name__ == '__main__':
         ID[i] = IP_READ[k + 2]
         PS[i] = IP_READ[k + 3]
         k += 4
-        #print('k')
-    print(IP)
-    print(ID)
-    print(PS)
     IP_Start(IP=IP,ID=ID,PAS=PS)
