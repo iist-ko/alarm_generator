@@ -350,12 +350,12 @@ class MainWindow(QMainWindow):
             pass
         ###############################################
 
-        myFont = QtGui.QFont("Calibri", 11)
+        myFont = QtGui.QFont("Arial", 11)
         myFont.setBold(True)
-        # Explain1 = QLabel('NAME                      IP                             ID                        '
-        #                   'PASS', self.dialog)
-        # Explain1.setFont(myFont)
-        # Explain1.move(22, 64)
+        Explain1 = QLabel('NAME                      IP                             ID                        '
+                          'PASS', self.dialog)
+        Explain1.setFont(myFont)
+        Explain1.move(22, 64)
 
         Button_Font = QtGui.QFont("Calibri", 11)
         Button_Font.setBold(True)
