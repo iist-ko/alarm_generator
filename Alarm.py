@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import os
+import time
+
+import cv2
 
 from ctypes import *
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -72,6 +75,7 @@ class MainWindow(QMainWindow):
         self.button1.setGeometry(115, 10, 100, 50)
 
         self.button2 = QPushButton('시작', self)
+        self.button2.clicked.connect(self.startstatus)
         self.button2.clicked.connect(self.Start)
         self.button2.setFont(Font)
         self.button2.setStyleSheet("color: white;"
@@ -97,6 +101,7 @@ class MainWindow(QMainWindow):
         self.button4.toggle()
         self.button4.setFont(Font)
         self.button4.clicked.connect(self.StopAlarm)
+        self.button4.clicked.connect(self.stopstatus)
         self.button4.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
@@ -120,8 +125,6 @@ class MainWindow(QMainWindow):
         self.Status.move(650,320)
         self.Status.setFont(Font)
         self.Status.setStyleSheet("color:Red;")
-        self.button2.clicked.connect(self.startstatus)
-        self.button4.clicked.connect(self.stopstatus)
 
         # 카메라
         # self.frm1 = QLabel(self)
@@ -154,6 +157,15 @@ class MainWindow(QMainWindow):
         # QDialog 설정
         self.dialog = QDialog()
         self.dialog2 = QDialog()
+
+        self.dialog2.setWindowTitle('Alarm Popup ')
+        self.dialog2.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
+        # self.dialog2.setWindowModality(Qt.ApplicationModal)
+        self.dialog2.resize(850, 850)
+
+        self.video_viewer_label = QLabel(self.dialog2)
+        self.video_viewer_label.setGeometry(QRect(10, 10, 800, 800))
+
 
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255, 255, 255))
@@ -499,9 +511,10 @@ class MainWindow(QMainWindow):
             # IP#
             nm2 = full_filename[full_filename.find('192.'):full_filename.find('.txt')]
             f = open(full_filename, 'r', encoding='UTF8')
-            object = f.read()
+            object = f.read().split("\n")
+            object_name, object_ip, object_maker, object_id, object_pas = object
             f.close()
-            self.Write_Table(nm, nm2, Object=object)
+            self.Write_Table(nm, nm2, Object=object_name)
             try:
                 self.alarm_controll(red=2, sound=self.soundCheck)
                 time.sleep(2)
@@ -509,25 +522,48 @@ class MainWindow(QMainWindow):
             except:
                 pass
             try :
+                threading.Thread(self.showdialog(object_ip, object_maker, object_id, object_pas)).start()
                 os.remove(full_filename)
             except:
                 pass
-
         if self.event.is_set():
             return
         #QTimer.singleShot(1000, self.table.show())
-        threading.Timer(4,self.detection_checking).start()
-        
-    def showdialog(self):
 
-        self.dialog2.setWindowTitle('Alarm Popup')
-        self.dialog2.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
-        # self.dialog2.setWindowModality(Qt.ApplicationModal)
-        self.dialog2.resize(520, 500)
-        log = QLabel('IP', self.dialog2)
-        log.move(170, 20)
+        threading.Timer(5,self.detection_checking).start()
+        
+    def showdialog(self, ip, maker, id, pas):
+        self.showImage(ip, maker, id, pas)
+        return
+
+    def showImage(self, ip, maker, id, pas):
+        register = id+':'+pas+'@'+ip
+        if 'Sey' in maker:
+            connector = 'rtsp://'+register+'/cam0_1'
+        else:
+            connector = 'rtsp://'+register+'/video1'
+        print(connector)
+        cap = cv2.VideoCapture(connector)
+        width, height, channel = 800, 800, 3
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        second = 3
+        count = 0
         self.dialog2.show()
-        time.sleep(2)
+        while fps*second > count:
+            print(count)
+            count+=1
+            ret, img = cap.read()
+            img = cv2.resize(img, (width, height))
+            bgr2rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            qt_img = QImage(bgr2rgb.data,
+                                  width, height, width * channel,
+                                  QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(qt_img)
+            self.video_viewer_label.setPixmap(pixmap)
+            if cv2.waitKey(fps) == 27:
+                break
+        cap.release()
+        cv2.destroyAllWindows()
         self.dialog2.close()
 
     def Write_Table(self, name, Ip, Object):
@@ -658,13 +694,15 @@ class MainWindow(QMainWindow):
             return 3
         else:
             print("Not Connect Usb")
-        return
+        return 10
 
     class ArrayStruct(Structure):
         _fields_ = [("char_t", POINTER(c_char))]
 
     def alarm_controll(self, red, yellow=0, green=0, blue=0, white=0, sound=0):
         C_index = self.ligth_status_check()
+        if C_index == 10:
+            return
         C_type = 0
 
         c_char_t = self.ArrayStruct()

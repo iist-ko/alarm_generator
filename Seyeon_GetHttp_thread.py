@@ -49,9 +49,9 @@ def IP_Checkable(IP, ID, PAS):
                 continue
             if js['DO_STATE'] == '0x07' and js['FES_DATA1'] == '0x00000001':
                 f = open(alarm+"/Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
-                f.write('Fire Alarm')
+                f.write('Fire Alarm\n'+IP[t]+'\nSeyeon'+'\n'+ID[t]+'\n'+PAS[t])
                 f.close()
-        time.sleep(2)
+        time.sleep(3)
 
 if __name__ == '__main__':
     print("Seyeon Fire Search")
