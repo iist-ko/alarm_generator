@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
-        self.button2.setGeometry(410, 10, 100, 50)
+        self.button2.setGeometry(610, 150, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
 
@@ -89,10 +89,10 @@ class MainWindow(QMainWindow):
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
-        self.button3.setGeometry(625, 10, 100, 50)
+        self.button3.setGeometry(490, 10, 100, 50)
 
         self.button4 = QPushButton('정지', self)
-        self.button4.setGeometry(520, 10, 100, 50)
+        self.button4.setGeometry(610, 210, 100, 50)
 
         self.button4.toggle()
         self.button4.setFont(Font)
@@ -104,22 +104,26 @@ class MainWindow(QMainWindow):
         self.button4.setDisabled(True)
 
         self.Alarm = QLabel('Alarm Option', self)
-        self.Alarm.move(600, 120)
+        self.Alarm.move(615, 10)
         self.Alarm.setFont(Font)
 
         self.rad1 = QRadioButton('Sound ON', self)
-        self.rad1.move(600, 150)
+        self.rad1.move(615, 30)
         self.rad1.setFont(Font)
         self.rad1.clicked.connect(self.SoundOn)
         self.rad2 = QRadioButton('Sound OFF', self)
-        self.rad2.move(600, 180)
+        self.rad2.move(615, 50)
         self.rad2.setFont(Font)
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.SoundOff)
-        self.Status = QLabel('STOP',self)
-        self.Status.move(650,320)
+        self.Status = QPushButton('STOP',self)
+        self.Status.setGeometry(620,280,90,90)
         self.Status.setFont(Font)
-        self.Status.setStyleSheet("color:Red;")
+        self.Status.setStyleSheet("background-color:Red;"
+                                  "color:white;"
+                                  "border-color: 1px solid red;"
+                                  "border-radius: 20px;")
+        self.Status.setDisabled(True)
         self.button2.clicked.connect(self.startstatus)
         self.button4.clicked.connect(self.stopstatus)
 
@@ -163,13 +167,19 @@ class MainWindow(QMainWindow):
         Font.setBold(True)
         self.Status.setText('START')
         self.Status.setFont(Font)
-        self.Status.setStyleSheet("color:blue;")
+        self.Status.setStyleSheet("background-color: Green;"
+                                  "color:white;"
+                                  "border-color: 1px solid Green;"
+                                  "border-radius: 20px;")
     def stopstatus(self):
         Font = QtGui.QFont("맑은 고딕", 9)
         Font.setBold(True)
         self.Status.setText('STOP')
         self.Status.setFont(Font)
-        self.Status.setStyleSheet("color:red;")
+        self.Status.setStyleSheet("background-color:Red;"
+                                  "color:white;"
+                                  "border-color: 1px solid red;"
+                                  "border-radius: 20px;")
     def SoundOn(self):
         self.soundCheck = 1
 
