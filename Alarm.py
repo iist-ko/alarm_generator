@@ -117,7 +117,7 @@ class MainWindow(QMainWindow):
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.SoundOff)
         self.Status = QPushButton('STOP',self)
-        self.Status.setGeometry(620,280,90,90)
+        self.Status.setGeometry(610,280,100,100)
         self.Status.setFont(Font)
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
