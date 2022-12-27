@@ -55,9 +55,9 @@ def IP_Checkable(IP, ID, PAS):
                 continue
             if js['GIS_ALARM1'] == '1':
                 f = open(alarm+"/Detection/"+NM[t]+"_"+IP[t] + ".txt", 'w', encoding='UTF8')
-                f.write('Fire Alarm')
+                f.write('Fire Alarm\n'+IP[t]+'\nTruen'+'\n'+ID[t]+'\n'+PAS[t])
                 f.close()
-        time.sleep(2)
+        time.sleep(3)
 
 if __name__ == '__main__':
     print("Truen Fire Search")
