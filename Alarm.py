@@ -41,8 +41,8 @@ class MainWindow(QMainWindow):
         self.event = threading.Event()
 
         # 메인 화면 설정
-        self.setGeometry(500, 250, 740, 410)  # x, y, w, h
-        self.setFixedSize(740, 410)
+        self.setGeometry(500, 250, 740, 430)  # x, y, w, h
+        self.setFixedSize(740, 430)
         self.setWindowTitle('Alarm Viewer')
 
         # QButton 위젯 폰트
@@ -51,7 +51,8 @@ class MainWindow(QMainWindow):
 
         # 메인 화면 아이콘 설정
         self.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
-        # ?
+
+        # 배경 색상
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255, 255, 255))
         self.setPalette(p)
@@ -88,6 +89,7 @@ class MainWindow(QMainWindow):
         self.button2.setGeometry(610, 150, 100, 50)
         self.button2.toggle()
         self.button2.setCheckable(True)
+        self.button2.clicked.connect(self.start_status)
 
         # 저장 버튼
         self.button3 = QPushButton('저장 후 리셋', self)
@@ -113,35 +115,35 @@ class MainWindow(QMainWindow):
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
         self.button4.setDisabled(True)
+        self.button4.clicked.connect(self.stop_status)
 
         # Alarm label
         self.Alarm = QLabel('Alarm Option', self)
         self.Alarm.move(615, 10)
         self.Alarm.setFont(font)
-        
 
         # Sound ON radioButton
         self.rad1 = QRadioButton('Sound ON', self)
-
         self.rad1.move(615, 30)
         self.rad1.setFont(font)
         self.rad1.clicked.connect(self.sound_on)
+
+        # Sound OFF radioButton
         self.rad2 = QRadioButton('Sound OFF', self)
         self.rad2.move(615, 50)
         self.rad2.setFont(font)
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.sound_off)
+
+        # Status check
         self.Status = QPushButton('STOP',self)
         self.Status.setGeometry(610,280,100,100)
         self.Status.setFont(font)
-
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
                                   "border-color: 1px solid red;"
                                   "border-radius: 20px;")
         self.Status.setDisabled(True)
-        self.button2.clicked.connect(self.start_status)
-        self.button4.clicked.connect(self.stop_status)
 
         # Table
         self.table = QTableWidget(self)
@@ -160,13 +162,17 @@ class MainWindow(QMainWindow):
                                  "border: 2px solid rgb(31,31,31);"
                                  "border-radius: 8px;")
 
+        self.Print_L = QLabel(' . . . ', self)
+        self.Print_L.setGeometry(10,400,730,20)
+        self.Print_L.setFont(font)
+
         # QDialog 설정
         self.dialog = QDialog()
         self.dialog.setPalette(p)
 
         # Popup Dialog
         self.dialog2 = QDialog()
-        self.dialog2.setWindowTitle('Alarm Popup ')
+        self.dialog2.setWindowTitle('Alarm Popup')
         self.dialog2.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
         self.dialog2.resize(850, 850)
         self.video_viewer_label = QLabel(self.dialog2)
@@ -177,7 +183,6 @@ class MainWindow(QMainWindow):
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
         self.Status.setText('START')
-
         self.Status.setFont(font)
         self.Status.setStyleSheet("background-color: Green;"
                                   "color:white;"
@@ -216,7 +221,6 @@ class MainWindow(QMainWindow):
         name_read = []
         try:
             self.seyeon_read_file(name_read, 'NAME')
-
         except:
             pass
         ###############################################
@@ -465,28 +469,27 @@ class MainWindow(QMainWindow):
             os.system('taskkill /f /im Truen_GetHttp_thread.exe')
             os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
         except:
-            print("Not process")
+            self.Print_L.setText("Not process")
 
         ### Truen 프로토콜 실행 ###
-
         subprocess.Popen(pwd+"/Thread/Truen_GetHttp_thread.exe", shell=True)
+        self.Print_L.setText('Truen IP search start')
         time.sleep(1)
-        print('Truen IP search start')
 
         # ### Seyeon 프로토콜 실행 ###
-
         subprocess.Popen(pwd+'/Thread/Seyeon_GetHttp_thread.exe', shell=True)
-        print('Seyeon IP search start')
+        self.Print_L.setText('Seyeon IP search start')
 
         self.event = threading.Event()
         self.button2.setDisabled(True)
         self.button4.setEnabled(True)
+        self.Print_L.setText('searching . . .')
         self.detection_checking()
 
     def detection_checking(self):
-        print('searching . . .')
         filenames = os.listdir("Detection")
         for filename in filenames:
+            self.Print_L.setText('Detect')
             full_filename = os.path.join("Detection", filename)
             # name#
             nm = full_filename[10:full_filename.find('_')]
@@ -498,15 +501,17 @@ class MainWindow(QMainWindow):
             f.close()
             self.write_table(nm, nm2, object_in=object_name)
             try:
-                self.alarm_controll(red=2, sound=self.soundCheck)
+                self.alarm_controller(red=2, sound=self.soundCheck)
                 time.sleep(2)
-                self.alarm_controll(red=0, sound=0)
+                self.alarm_controller(red=0, sound=0)
             except:
+                self.Print_L.setText('Alarm controller error')
                 pass
             try :
                 threading.Thread(self.show_dialog(object_ip, object_maker, object_id, object_pas)).start()
                 os.remove(full_filename)
             except:
+                self.Print_L.setText('Pop up error')
                 pass
         if self.event.is_set():
             return
@@ -594,7 +599,7 @@ class MainWindow(QMainWindow):
         
         path = pwd+"/LogData/" + "Alarm_Data_" + now_time + ".txt"
 
-        print("saving", path)
+        self.Print_L.setText("Save : " + path)
 
         writer = open(path, 'w', newline='')
 
@@ -658,9 +663,11 @@ class MainWindow(QMainWindow):
             self.event.set()
             self.button2.setEnabled(True)
             self.button4.setDisabled(True)
-            self.alarm_controll(red=0, sound=0)
+            self.alarm_controller(red=0, sound=0)
         except:
-            print('There is no process to stop.')
+            self.Print_L.setText('There is no process to stop.')
+        self.Print_L.setText('All process to stop.')
+
 
     def ligth_status_check(self):
         state = light_dll['Usb_Qu_Getstate']()
@@ -673,7 +680,7 @@ class MainWindow(QMainWindow):
         elif state == 0x8:
             return 3
         else:
-            print("Not Connect Usb")
+            self.Print_L.setText("Not Connect Usb")
         return 10
 
     class ArrayStruct(Structure):
