@@ -3,7 +3,6 @@ import os
 import time
 
 import cv2
-
 from ctypes import *
 
 from PyQt5 import QtGui, QtCore
