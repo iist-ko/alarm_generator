@@ -128,20 +128,20 @@ class MainWindow(QMainWindow):
         self.rad1.clicked.connect(self.sound_on)
         self.rad2 = QRadioButton('Sound OFF', self)
         self.rad2.move(615, 50)
-        self.rad2.setFont(Font)
+        self.rad2.setFont(font)
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.sound_off)
         self.Status = QPushButton('STOP',self)
         self.Status.setGeometry(610,280,100,100)
-        self.Status.setFont(Font)
+        self.Status.setFont(font)
 
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
                                   "border-color: 1px solid red;"
                                   "border-radius: 20px;")
         self.Status.setDisabled(True)
-        self.button2.clicked.connect(self.startstatus)
-        self.button4.clicked.connect(self.stopstatus)
+        self.button2.clicked.connect(self.start_status)
+        self.button4.clicked.connect(self.stop_status)
 
         # Table
         self.table = QTableWidget(self)
@@ -184,15 +184,15 @@ class MainWindow(QMainWindow):
                                   "border-color: 1px solid Green;"
                                   "border-radius: 20px;")
     def stop_status(self):
-        Font = QtGui.QFont("맑은 고딕", 9)
-        Font.setBold(True)
+        font = QtGui.QFont("맑은 고딕", 9)
+        font.setBold(True)
         self.Status.setText('STOP')
         self.Status.setFont(font)
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
                                   "border-color: 1px solid red;"
                                   "border-radius: 20px;")
-    def sount_on(self):
+    def sound_on(self):
         self.soundCheck = 1
 
     def sound_off(self):
@@ -660,7 +660,7 @@ class MainWindow(QMainWindow):
             self.button4.setDisabled(True)
             self.alarm_controll(red=0, sound=0)
         except:
-            print('정지할 프로세스가 없습니다')
+            print('There is no process to stop.')
 
     def ligth_status_check(self):
         state = light_dll['Usb_Qu_Getstate']()
