@@ -41,13 +41,19 @@ class MainWindow(QMainWindow):
         self.event = threading.Event()
 
         # 메인 화면 설정
-        self.setGeometry(500, 250, 740, 430)  # x, y, w, h
-        self.setFixedSize(740, 430)
+        self.setGeometry(300, 250, 1350, 600)  # x, y, w, h
+        self.setFixedSize(1350, 600)
         self.setWindowTitle('Alarm Viewer')
 
         # QButton 위젯 폰트
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
+
+        fontT = QtGui.QFont("맑은 고딕", 16)
+        fontT.setBold(True)
+
+        fontS = QtGui.QFont("맑은 고딕", 12)
+        fontS.setBold(True)
 
         # 메인 화면 아이콘 설정
         self.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
@@ -58,38 +64,47 @@ class MainWindow(QMainWindow):
         self.setPalette(p)
 
         # Seyeon IP 추가 버튼
-        self.button0 = QPushButton('9302/8020 등록', self)
-        self.button0.clicked.connect(self.seyeon_ip_open)
+        self.button0 = QPushButton('시작', self)
+        # self.button0.clicked.connect(self.seyeon_ip_open)
+        self.button0.clicked.connect(self.start_status)
+        self.button0.clicked.connect(self.start)
         self.button0.setFont(font)
         self.button0.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
         self.button0.setGeometry(10, 10, 100, 50)
+        self.button0.toggle()
+        self.button0.setCheckable(True)
+        self.button0.clicked.connect(self.start_status)
 
         # Truen IP 추가 버튼
-        self.button1 = QPushButton('3204 등록', self)
-        self.button1.clicked.connect(self.truen_ip_open)
+        self.button1 = QPushButton('정지', self)
+        # self.button1.clicked.connect(self.truen_ip_open)
         self.button1.setFont(font)
         self.button1.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
                                    "border-radius: 20px;")
+        self.button1.clicked.connect(self.stop_alarm)
+        self.button1.clicked.connect(self.stop_status)
         self.button1.setGeometry(115, 10, 100, 50)
+        self.button1.setDisabled(True)
+        self.button1.clicked.connect(self.stop_status)
 
         # 시작 버튼
-        self.button2 = QPushButton('시작', self)
-        self.button2.clicked.connect(self.start_status)
-        self.button2.clicked.connect(self.start)
-        self.button2.setFont(font)
-        self.button2.setStyleSheet("color: white;"
-                                   "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-                                   "border: 1px solid black;"
-                                   "border-radius: 20px;")
-        self.button2.setGeometry(610, 150, 100, 50)
-        self.button2.toggle()
-        self.button2.setCheckable(True)
-        self.button2.clicked.connect(self.start_status)
+        # self.button2 = QPushButton('시작', self)
+        # self.button2.clicked.connect(self.start_status)
+        # self.button2.clicked.connect(self.start)
+        # self.button2.setFont(font)
+        # self.button2.setStyleSheet("color: white;"
+        #                            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+        #                            "border: 1px solid black;"
+        #                            "border-radius: 20px;")
+        # self.button2.setGeometry(610, 150, 100, 50)
+        # self.button2.toggle()
+        # self.button2.setCheckable(True)
+        # self.button2.clicked.connect(self.start_status)
 
         # 저장 버튼
         self.button3 = QPushButton('저장 후 리셋', self)
@@ -102,42 +117,42 @@ class MainWindow(QMainWindow):
         self.button3.setGeometry(490, 10, 100, 50)
 
         # 종료 버튼
-        self.button4 = QPushButton('정지', self)
-
-        self.button4.setGeometry(610, 210, 100, 50)
-
-        self.button4.toggle()
-        self.button4.setFont(font)
-        self.button4.clicked.connect(self.stop_alarm)
-        self.button4.clicked.connect(self.stop_status)
-        self.button4.setStyleSheet("color: white;"
-                                   "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-                                   "border: 1px solid black;"
-                                   "border-radius: 20px;")
-        self.button4.setDisabled(True)
-        self.button4.clicked.connect(self.stop_status)
+        # self.button4 = QPushButton('정지', self)
+        #
+        # self.button4.setGeometry(610, 210, 100, 50)
+        #
+        # self.button4.toggle()
+        # self.button4.setFont(font)
+        # self.button4.clicked.connect(self.stop_alarm)
+        # self.button4.clicked.connect(self.stop_status)
+        # self.button4.setStyleSheet("color: white;"
+        #                            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+        #                            "border: 1px solid black;"
+        #                            "border-radius: 20px;")
+        # self.button4.setDisabled(True)
+        # self.button4.clicked.connect(self.stop_status)
 
         # Alarm label
         self.Alarm = QLabel('Alarm Option', self)
-        self.Alarm.move(615, 10)
+        self.Alarm.move(400, 5)
         self.Alarm.setFont(font)
 
         # Sound ON radioButton
         self.rad1 = QRadioButton('Sound ON', self)
-        self.rad1.move(615, 30)
+        self.rad1.move(400, 20)
         self.rad1.setFont(font)
         self.rad1.clicked.connect(self.sound_on)
 
         # Sound OFF radioButton
         self.rad2 = QRadioButton('Sound OFF', self)
-        self.rad2.move(615, 50)
+        self.rad2.move(400, 40)
         self.rad2.setFont(font)
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.sound_off)
 
         # Status check
         self.Status = QPushButton('STOP',self)
-        self.Status.setGeometry(610,280,100,100)
+        self.Status.setGeometry(220,10,90,50)
         self.Status.setFont(font)
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
@@ -156,14 +171,14 @@ class MainWindow(QMainWindow):
         self.table.setColumnWidth(1, 140)
         self.table.setColumnWidth(2, 130)
         self.table.setColumnWidth(3, 120)
-        self.table.setGeometry(10, 70, 580, 328)
+        self.table.setGeometry(10, 70, 580, 505)
         self.table.setStyleSheet("color: black;"
                                  "background-color: white;"
                                  "border: 2px solid rgb(31,31,31);"
                                  "border-radius: 8px;")
 
         self.Print_L = QLabel(' . . . ', self)
-        self.Print_L.setGeometry(10,400,730,20)
+        self.Print_L.setGeometry(10,570,730,20)
         self.Print_L.setFont(font)
 
         # QDialog 설정
@@ -178,7 +193,143 @@ class MainWindow(QMainWindow):
         self.video_viewer_label = QLabel(self.dialog2)
         self.video_viewer_label.setGeometry(QRect(10, 10, 800, 800))
 
-    #
+
+        #2023-04-20 add
+
+        self.model = QLabel('Camera Lists',self)
+        self.model.setFont(fontT)
+        self.model.setGeometry(630, 30, 150, 20)
+
+        #카메라 리스트
+        nm_list = ['NM0', 'NM1', 'NM2', 'NM3', 'NM4', 'NM5', 'NM6', 'NM7', 'NM8', 'NM9', 'NM10', 'NM11', 'NM12', 'NM13',
+                   'NM14', 'NM15']
+        ip_list = ['IP0', 'IP1', 'IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP9', 'IP10', 'IP11', 'IP12', 'IP13',
+                   'IP14', 'IP15']
+        id_list = ['ID0', 'ID1', 'ID2', 'ID3', 'ID4', 'ID5', 'ID6', 'ID7', 'ID8', 'ID9', 'ID10', 'ID11', 'ID12', 'ID13',
+                   'ID14', 'ID15']
+        ps_list = ['PS0', 'PS1', 'PS2', 'PS3', 'PS4', 'PS5', 'PS6', 'PS7', 'PS8', 'PS9', 'PS10', 'PS11', 'PS12', 'PS13',
+                   'PS14', 'PS15']
+        md_list = ['md0','md1','md2','md3','md4','md5','md6','md7','md8','md9','md10','md11','md12','md13',
+                   'md14','md15']
+        st_list = ['st0','st1','st2','st3','st4','st5','st6','st7','st8','st9','st10','st11','st12','st13','st14','st15']
+
+        #카메라 리스트 작성란
+        for i in range(0,16):
+            nm_list = QLineEdit(self)
+            nm_list.setGeometry(630, 90+30*i, 70, 30)
+
+            md_list = QComboBox(self)
+            md_list.setFont(font)
+            md_list.addItem('8020')
+            md_list.addItem('3204')
+            md_list.setGeometry(700, 90+30*i, 70, 30)
+
+            ip_list = QLineEdit(self)
+            ip_list.setFont(font)
+            ip_list.setGeometry(770, 90 + 30 * i, 100, 30)
+
+            id_list = QLineEdit(self)
+            id_list.setFont(font)
+            id_list.setGeometry(870, 90+30*i,70,30)
+
+            ps_list = QLineEdit(self)
+            ps_list.setFont(font)
+            ps_list.setGeometry(940, 90 + 30 * i, 70, 30)
+
+            st_list = QPushButton(self)
+            st_list.setText('ON')
+            st_list.setDisabled(True)
+            st_list.setFont(font)
+            st_list.setGeometry(1010, 90+30*i, 70, 30)
+            st_list.setStyleSheet("background-color:White;"
+                                      "color:Black;"
+                                  "border: 1px solid Black;")
+
+        #카메라 리스트 인덱스 라벨
+        self.namel = QLabel('이름',self)
+        self.namel.setFont(fontT)
+        self.namel.setGeometry(630, 55, 50, 40)
+
+        self.modell = QLabel('모델명', self)
+        self.modell.setFont(fontT)
+        self.modell.setGeometry(700, 55, 70, 40)
+
+        self.ipl = QLabel('IP', self)
+        self.ipl.setFont(fontT)
+        self.ipl.setAlignment(Qt.AlignCenter)
+        self.ipl.setGeometry(790, 55, 70, 40)
+
+        self.idl = QLabel('ID', self)
+        self.idl.setFont(fontT)
+        self.idl.setAlignment(Qt.AlignCenter)
+        self.idl.setGeometry(870, 55, 70, 40)
+
+        self.psl = QLabel('PASS', self)
+        self.psl.setFont(fontT)
+        self.psl.setAlignment(Qt.AlignCenter)
+        self.psl.setGeometry(940, 55, 70, 40)
+
+        self.stl = QLabel('Status', self)
+        self.stl.setFont(fontT)
+        self.stl.setAlignment(Qt.AlignCenter)
+        self.stl.setGeometry(1010,55,70,40)
+
+        #로그인 메뉴
+        self.login = QLineEdit(self)
+        self.login.setFont(font)
+        self.login.setGeometry(800,5,80,30)
+
+        self.login2 = QPushButton('LogIn',self)
+        self.login2.setFont(font)
+        self.login2.setGeometry(880,5,50,30)
+
+        self.login3 = QPushButton('save',self)
+        self.login3.setFont(font)
+        self.login3.setGeometry(930,5,50,30)
+
+        #알람설정 & 테스트 모드 라벨
+        self.onoff = QLabel('알람 설정',self)
+        self.onoff.setFont(fontT)
+        self.onoff.setGeometry(1090, 55, 200, 40)
+
+        self.onoff = QLabel('Test Mode', self)
+        self.onoff.setFont(fontT)
+        self.onoff.setGeometry(1220, 55, 200, 40)
+
+        alarmon = ['alarmon0','alarmon1','alarmon2','alarmon3','alarmon4','alarmon5','alarmon6','alarmon7','alarmon8'
+            ,'alarmon9','alarmon10','alarmon11','alarmon12','alarmon13','alarmon14','alarmon15']
+        alarmoff = ['alarmoff0','alarmoff1','alarmoff2','alarmoff3','alarmoff4','alarmoff5','alarmoff6','alarmoff7'
+            ,'alarmoff8','alarmoff9','alarmoff10','alarmoff11','alarmoff12','alarmoff13','alarmoff14','alarmoff15']
+        test = ['test0','test1','test2','test3','test4','test5','test6','test7','test8','test9','test10','test11'
+            ,'test12','test13','test14','test15']
+        #알람설정 & 테스트 모드 버튼
+        for i in range(0,16):
+            alarmon[i] = QPushButton('ON',self)
+            alarmon[i].setGeometry(1090, 95 + 30*i, 50, 30)
+            alarmon[i].setFont(font)
+
+            alarmoff[i] = QPushButton('OFF', self)
+            alarmoff[i].setGeometry(1140, 95 + 30*i, 50, 30)
+            alarmoff[i].setFont(font)
+
+            test[i] = QPushButton(self)
+            test[i].setText('ON')
+            test[i].setGeometry(1220, 95 + 30 * i, 100, 30)
+            test[i].setFont(font)
+
+        #알람 모두 활성화/비활성화 버튼
+        self.allon = QPushButton('ON',self)
+        self.allon.setFont(font)
+        self.allon.setGeometry(1090, 27, 50, 30)
+        self.alloff = QPushButton('OFF', self)
+        self.alloff.setFont(font)
+        self.alloff.setGeometry(1140, 27, 50, 30)
+
+        #알람 모두 활성화/비활성화 라벨
+        self.allalarm = QLabel('전체 제어',self)
+        self.allalarm.setFont(fontS)
+        self.allalarm.setGeometry(1090, 0, 100, 40)
+
     def start_status(self):
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
@@ -481,8 +632,8 @@ class MainWindow(QMainWindow):
         self.Print_L.setText('Seyeon IP search start')
 
         self.event = threading.Event()
-        self.button2.setDisabled(True)
-        self.button4.setEnabled(True)
+        self.button0.setDisabled(True)
+        self.button1.setEnabled(True)
         self.Print_L.setText('searching . . .')
         self.detection_checking()
 
@@ -661,8 +812,8 @@ class MainWindow(QMainWindow):
             os.system('taskkill /f /im Truen_GetHttp_thread.exe')
             os.system('taskkill /f /im Seyeon_GetHttp_thread.exe')
             self.event.set()
-            self.button2.setEnabled(True)
-            self.button4.setDisabled(True)
+            self.button0.setEnabled(True)
+            self.button1.setDisabled(True)
             self.alarm_controller(red=0, sound=0)
         except:
             self.Print_L.setText('There is no process to stop.')
