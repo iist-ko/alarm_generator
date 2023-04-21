@@ -30,7 +30,8 @@ try:
 except:
     pass
 
-light_dll = WinDLL(pwd+'/lib/Ux64_dllc.dll')
+light_dll = WinDLL(pwd + '/lib/Ux64_dllc.dll')
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -49,26 +50,36 @@ class MainWindow(QMainWindow):
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
 
-        fontT = QtGui.QFont("맑은 고딕", 16)
+        fontT = QtGui.QFont("맑은 고딕", 13)
         fontT.setBold(True)
 
         fontS = QtGui.QFont("맑은 고딕", 12)
         fontS.setBold(True)
 
+        fontE = QtGui.QFont("cambria", 12)
+        fontE.setBold(True)
+
+        fontE2 = QtGui.QFont("cambria", 9)
+
+        fontC = QtGui.QFont("calibri", 9)
+
+        fontC2 = QtGui.QFont("calibri", 9)
+        fontC2.setBold(True)
+
         # 메인 화면 아이콘 설정
-        self.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
+        self.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
 
         # 배경 색상
         p = QPalette()
         p.setColor(QPalette.Background, QColor(255, 255, 255))
         self.setPalette(p)
 
-        # Seyeon IP 추가 버튼
-        self.button0 = QPushButton('시작', self)
+        # 시작 버튼
+        self.button0 = QPushButton('START', self)
         # self.button0.clicked.connect(self.seyeon_ip_open)
         self.button0.clicked.connect(self.start_status)
         self.button0.clicked.connect(self.start)
-        self.button0.setFont(font)
+        self.button0.setFont(fontE2)
         self.button0.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
@@ -78,10 +89,10 @@ class MainWindow(QMainWindow):
         self.button0.setCheckable(True)
         self.button0.clicked.connect(self.start_status)
 
-        # Truen IP 추가 버튼
-        self.button1 = QPushButton('정지', self)
+        # 정지 버튼
+        self.button1 = QPushButton('STOP', self)
         # self.button1.clicked.connect(self.truen_ip_open)
-        self.button1.setFont(font)
+        self.button1.setFont(fontE2)
         self.button1.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
@@ -92,24 +103,10 @@ class MainWindow(QMainWindow):
         self.button1.setDisabled(True)
         self.button1.clicked.connect(self.stop_status)
 
-        # 시작 버튼
-        # self.button2 = QPushButton('시작', self)
-        # self.button2.clicked.connect(self.start_status)
-        # self.button2.clicked.connect(self.start)
-        # self.button2.setFont(font)
-        # self.button2.setStyleSheet("color: white;"
-        #                            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-        #                            "border: 1px solid black;"
-        #                            "border-radius: 20px;")
-        # self.button2.setGeometry(610, 150, 100, 50)
-        # self.button2.toggle()
-        # self.button2.setCheckable(True)
-        # self.button2.clicked.connect(self.start_status)
-
         # 저장 버튼
-        self.button3 = QPushButton('저장 후 리셋', self)
+        self.button3 = QPushButton('SAVE RESET', self)
         self.button3.clicked.connect(self.reset_table)
-        self.button3.setFont(font)
+        self.button3.setFont(fontE2)
         self.button3.setStyleSheet("color: white;"
                                    "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
                                    "border: 1px solid black;"
@@ -135,25 +132,25 @@ class MainWindow(QMainWindow):
         # Alarm label
         self.Alarm = QLabel('Alarm Option', self)
         self.Alarm.move(400, 5)
-        self.Alarm.setFont(font)
+        self.Alarm.setFont(fontC)
 
         # Sound ON radioButton
         self.rad1 = QRadioButton('Sound ON', self)
         self.rad1.move(400, 20)
-        self.rad1.setFont(font)
+        self.rad1.setFont(fontC)
         self.rad1.clicked.connect(self.sound_on)
 
         # Sound OFF radioButton
         self.rad2 = QRadioButton('Sound OFF', self)
         self.rad2.move(400, 40)
-        self.rad2.setFont(font)
+        self.rad2.setFont(fontC)
         self.rad2.setChecked(True)
         self.rad2.clicked.connect(self.sound_off)
 
         # Status check
-        self.Status = QPushButton('STOP',self)
-        self.Status.setGeometry(220,10,90,50)
-        self.Status.setFont(font)
+        self.Status = QPushButton('STOP', self)
+        self.Status.setGeometry(220, 10, 90, 50)
+        self.Status.setFont(fontE)
         self.Status.setStyleSheet("background-color:Red;"
                                   "color:white;"
                                   "border-color: 1px solid red;"
@@ -178,7 +175,7 @@ class MainWindow(QMainWindow):
                                  "border-radius: 8px;")
 
         self.Print_L = QLabel(' . . . ', self)
-        self.Print_L.setGeometry(10,570,730,20)
+        self.Print_L.setGeometry(10, 570, 730, 20)
         self.Print_L.setFont(font)
 
         # QDialog 설정
@@ -193,14 +190,13 @@ class MainWindow(QMainWindow):
         self.video_viewer_label = QLabel(self.dialog2)
         self.video_viewer_label.setGeometry(QRect(10, 10, 800, 800))
 
+        # 2023-04-20 add
 
-        #2023-04-20 add
-
-        self.model = QLabel('Camera Lists',self)
-        self.model.setFont(fontT)
+        self.model = QLabel('Camera Lists', self)
+        self.model.setFont(fontE)
         self.model.setGeometry(630, 30, 150, 20)
 
-        #카메라 리스트
+        # 카메라 리스트
         nm_list = ['NM0', 'NM1', 'NM2', 'NM3', 'NM4', 'NM5', 'NM6', 'NM7', 'NM8', 'NM9', 'NM10', 'NM11', 'NM12', 'NM13',
                    'NM14', 'NM15']
         ip_list = ['IP0', 'IP1', 'IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP9', 'IP10', 'IP11', 'IP12', 'IP13',
@@ -209,127 +205,165 @@ class MainWindow(QMainWindow):
                    'ID14', 'ID15']
         ps_list = ['PS0', 'PS1', 'PS2', 'PS3', 'PS4', 'PS5', 'PS6', 'PS7', 'PS8', 'PS9', 'PS10', 'PS11', 'PS12', 'PS13',
                    'PS14', 'PS15']
-        md_list = ['md0','md1','md2','md3','md4','md5','md6','md7','md8','md9','md10','md11','md12','md13',
-                   'md14','md15']
-        st_list = ['st0','st1','st2','st3','st4','st5','st6','st7','st8','st9','st10','st11','st12','st13','st14','st15']
+        md_list = ['md0', 'md1', 'md2', 'md3', 'md4', 'md5', 'md6', 'md7', 'md8', 'md9', 'md10', 'md11', 'md12', 'md13',
+                   'md14', 'md15']
+        st_list = ['st0', 'st1', 'st2', 'st3', 'st4', 'st5', 'st6', 'st7', 'st8', 'st9', 'st10', 'st11', 'st12', 'st13',
+                   'st14', 'st15']
 
-        #카메라 리스트 작성란
-        for i in range(0,16):
+        # 카메라 리스트 작성란
+        for i in range(0, 16):
             nm_list = QLineEdit(self)
-            nm_list.setGeometry(630, 90+30*i, 70, 30)
+            nm_list.setFont(fontE2)
+            nm_list.setGeometry(630, 90 + 31 * i, 90, 30)
+            nm_list.setStyleSheet("box-shadow: inset 5px 5px 5px -5px #333;")
 
             md_list = QComboBox(self)
             md_list.setFont(font)
+            md_list.addItem('Select')
             md_list.addItem('8020')
             md_list.addItem('3204')
-            md_list.setGeometry(700, 90+30*i, 70, 30)
+            md_list.setGeometry(720, 90 + 31 * i, 70, 30)
+            md_list.setStyleSheet("background-color: white;"
+                                  "color:Black;"
+                                  "Border:0.5px solid black;"
+                                  "box-shadow: inset 5px 5px 5px -5px #333;")
 
             ip_list = QLineEdit(self)
-            ip_list.setFont(font)
-            ip_list.setGeometry(770, 90 + 30 * i, 100, 30)
+            ip_list.setFont(fontE2)
+            ip_list.setGeometry(790, 90 + 31 * i, 100, 30)
+            ip_list.setStyleSheet("box-shadow: inset 5px 5px 5px -5px #333;")
 
             id_list = QLineEdit(self)
-            id_list.setFont(font)
-            id_list.setGeometry(870, 90+30*i,70,30)
+            id_list.setFont(fontE2)
+            id_list.setGeometry(890, 90 + 31 * i, 90, 30)
+            id_list.setStyleSheet("box-shadow: inset 5px 5px 5px -5px #333;")
 
             ps_list = QLineEdit(self)
-            ps_list.setFont(font)
-            ps_list.setGeometry(940, 90 + 30 * i, 70, 30)
+            ps_list.setFont(fontE2)
+            ps_list.setEchoMode(QLineEdit.Password)
+            ps_list.setGeometry(980, 90 + 31 * i, 70, 30)
+            ps_list.setStyleSheet("box-shadow: inset 5px 5px 5px -5px #333;")
 
             st_list = QPushButton(self)
             st_list.setText('ON')
             st_list.setDisabled(True)
-            st_list.setFont(font)
-            st_list.setGeometry(1010, 90+30*i, 70, 30)
+            st_list.setFont(fontE)
+            st_list.setGeometry(1050, 90 + 31 * i, 70, 30)
             st_list.setStyleSheet("background-color:White;"
-                                      "color:Black;"
-                                  "border: 1px solid Black;")
+                                  "color:green;"
+                                  "border: 1px solid Black;"
+                                  "box-shadow: inset 5px 5px 5px -5px #333;")
 
-        #카메라 리스트 인덱스 라벨
-        self.namel = QLabel('이름',self)
-        self.namel.setFont(fontT)
-        self.namel.setGeometry(630, 55, 50, 40)
+        # 카메라 리스트 인덱스 라벨
+        self.namel = QLabel('Name', self)
+        self.namel.setFont(fontE)
+        self.namel.setAlignment(Qt.AlignCenter)
+        self.namel.setGeometry(630, 55, 80, 40)
 
-        self.modell = QLabel('모델명', self)
-        self.modell.setFont(fontT)
-        self.modell.setGeometry(700, 55, 70, 40)
+        self.modell = QLabel('MODEL', self)
+        self.modell.setFont(fontE)
+        self.modell.setGeometry(730, 55, 70, 40)
 
         self.ipl = QLabel('IP', self)
-        self.ipl.setFont(fontT)
+        self.ipl.setFont(fontE)
         self.ipl.setAlignment(Qt.AlignCenter)
-        self.ipl.setGeometry(790, 55, 70, 40)
+        self.ipl.setGeometry(810, 55, 70, 40)
 
         self.idl = QLabel('ID', self)
-        self.idl.setFont(fontT)
+        self.idl.setFont(fontE)
         self.idl.setAlignment(Qt.AlignCenter)
-        self.idl.setGeometry(870, 55, 70, 40)
+        self.idl.setGeometry(890, 55, 70, 40)
 
         self.psl = QLabel('PASS', self)
-        self.psl.setFont(fontT)
+        self.psl.setFont(fontE)
         self.psl.setAlignment(Qt.AlignCenter)
-        self.psl.setGeometry(940, 55, 70, 40)
+        self.psl.setGeometry(985, 55, 70, 40)
 
-        self.stl = QLabel('Status', self)
-        self.stl.setFont(fontT)
+        self.stl = QLabel('STATUS', self)
+        self.stl.setFont(fontE)
         self.stl.setAlignment(Qt.AlignCenter)
-        self.stl.setGeometry(1010,55,70,40)
+        self.stl.setGeometry(1050, 55, 70, 40)
 
-        #로그인 메뉴
+        # 로그인 메뉴
         self.login = QLineEdit(self)
-        self.login.setFont(font)
-        self.login.setGeometry(800,5,80,30)
+        self.login.setFont(fontC)
+        self.login.setGeometry(800, 5, 150, 30)
 
-        self.login2 = QPushButton('LogIn',self)
-        self.login2.setFont(font)
-        self.login2.setGeometry(880,5,50,30)
+        self.login2 = QPushButton('LOGIN', self)
+        self.login2.setFont(fontC2)
+        self.login2.setStyleSheet(
+            "color:white;"
+            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));")
+        self.login2.setGeometry(960, 5, 55, 30)
 
-        self.login3 = QPushButton('save',self)
-        self.login3.setFont(font)
-        self.login3.setGeometry(930,5,50,30)
+        self.login3 = QPushButton('SAVE', self)
+        self.login3.setFont(fontC2)
+        self.login3.setStyleSheet(
+            "color:white;"
+            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));")
+        self.login3.setGeometry(1020, 5, 55, 30)
 
-        #알람설정 & 테스트 모드 라벨
-        self.onoff = QLabel('알람 설정',self)
-        self.onoff.setFont(fontT)
-        self.onoff.setGeometry(1090, 55, 200, 40)
+        # 알람설정 & 테스트 모드 라벨
+        self.onoff = QLabel('Alarm', self)
+        self.onoff.setFont(fontE)
+        self.onoff.setGeometry(1160, 55, 200, 40)
 
-        self.onoff = QLabel('Test Mode', self)
-        self.onoff.setFont(fontT)
-        self.onoff.setGeometry(1220, 55, 200, 40)
+        self.onoff = QLabel('Test', self)
+        self.onoff.setFont(fontE)
+        self.onoff.setGeometry(1285, 55, 200, 40)
 
-        alarmon = ['alarmon0','alarmon1','alarmon2','alarmon3','alarmon4','alarmon5','alarmon6','alarmon7','alarmon8'
-            ,'alarmon9','alarmon10','alarmon11','alarmon12','alarmon13','alarmon14','alarmon15']
-        alarmoff = ['alarmoff0','alarmoff1','alarmoff2','alarmoff3','alarmoff4','alarmoff5','alarmoff6','alarmoff7'
-            ,'alarmoff8','alarmoff9','alarmoff10','alarmoff11','alarmoff12','alarmoff13','alarmoff14','alarmoff15']
-        test = ['test0','test1','test2','test3','test4','test5','test6','test7','test8','test9','test10','test11'
-            ,'test12','test13','test14','test15']
-        #알람설정 & 테스트 모드 버튼
-        for i in range(0,16):
-            alarmon[i] = QPushButton('ON',self)
-            alarmon[i].setGeometry(1090, 95 + 30*i, 50, 30)
-            alarmon[i].setFont(font)
+        alarmon = ['alarmon0', 'alarmon1', 'alarmon2', 'alarmon3', 'alarmon4', 'alarmon5', 'alarmon6', 'alarmon7',
+                   'alarmon8'
+            , 'alarmon9', 'alarmon10', 'alarmon11', 'alarmon12', 'alarmon13', 'alarmon14', 'alarmon15']
+        alarmoff = ['alarmoff0', 'alarmoff1', 'alarmoff2', 'alarmoff3', 'alarmoff4', 'alarmoff5', 'alarmoff6',
+                    'alarmoff7'
+            , 'alarmoff8', 'alarmoff9', 'alarmoff10', 'alarmoff11', 'alarmoff12', 'alarmoff13', 'alarmoff14',
+                    'alarmoff15']
+        test = ['test0', 'test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8', 'test9', 'test10',
+                'test11'
+            , 'test12', 'test13', 'test14', 'test15']
+        # 알람설정 & 테스트 모드 버튼
+        for i in range(0, 16):
+            alarmon[i] = QPushButton('ON', self)
+            alarmon[i].setGeometry(1150, 90 + 31 * i, 50, 30)
+            alarmon[i].setFont(fontC2)
+            alarmon[i].setStyleSheet("background-color:rgba(196,221,253,180);"
+                                     "color: green;")
 
             alarmoff[i] = QPushButton('OFF', self)
-            alarmoff[i].setGeometry(1140, 95 + 30*i, 50, 30)
-            alarmoff[i].setFont(font)
+            alarmoff[i].setGeometry(1200, 90 + 31 * i, 50, 30)
+            alarmoff[i].setFont(fontC2)
+            alarmoff[i].setStyleSheet("background-color:rgba(196,221,253,180);"
+                                      "color: red;")
 
             test[i] = QPushButton(self)
-            test[i].setText('ON')
-            test[i].setGeometry(1220, 95 + 30 * i, 100, 30)
-            test[i].setFont(font)
+            test[i].setText('OFF')
+            test[i].setGeometry(1270, 90 + 31 * i, 70, 30)
+            test[i].setFont(fontC)
+            test[i].setStyleSheet("background-color: grey;"
+                                  "color: white;")
 
-        #알람 모두 활성화/비활성화 버튼
-        self.allon = QPushButton('ON',self)
+        # 알람 모두 활성화/비활성화 버튼
+        self.allon = QPushButton('ALL ON', self)
         self.allon.setFont(font)
-        self.allon.setGeometry(1090, 27, 50, 30)
-        self.alloff = QPushButton('OFF', self)
+        self.allon.setGeometry(1140, 27, 60, 30)
+        self.allon.setStyleSheet("background-color:Green;"
+                                 "color:white;")
+        self.alloff = QPushButton('ALL OFF', self)
         self.alloff.setFont(font)
-        self.alloff.setGeometry(1140, 27, 50, 30)
+        self.alloff.setGeometry(1200, 27, 60, 30)
+        self.alloff.setStyleSheet("background-color:Red;"
+                                  "color:white;")
 
-        #알람 모두 활성화/비활성화 라벨
-        self.allalarm = QLabel('전체 제어',self)
-        self.allalarm.setFont(fontS)
-        self.allalarm.setGeometry(1090, 0, 100, 40)
-
+        # 알람 모두 활성화/비활성화 라벨
+        # self.allalarm = QLabel('전체 제어',self)
+        # self.allalarm.setFont(fontS)
+        # self.allalarm.setGeometry(1090, 0, 100, 40)
+    def round_click(self):
+        self.button0.setStyleSheet("background-color: white;"
+                                   "color:black;"
+                                   "border: 1px solid black;"
+                                   "border-radius: 20px;")
     def start_status(self):
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
@@ -339,6 +373,7 @@ class MainWindow(QMainWindow):
                                   "color:white;"
                                   "border-color: 1px solid Green;"
                                   "border-radius: 20px;")
+
     def stop_status(self):
         font = QtGui.QFont("맑은 고딕", 9)
         font.setBold(True)
@@ -348,6 +383,7 @@ class MainWindow(QMainWindow):
                                   "color:white;"
                                   "border-color: 1px solid red;"
                                   "border-radius: 20px;")
+
     def sound_on(self):
         self.soundCheck = 1
 
@@ -360,13 +396,13 @@ class MainWindow(QMainWindow):
         ############## LINE ###############
 
         nm_list = ['NM0', 'NM1', 'NM2', 'NM3', 'NM4', 'NM5', 'NM6', 'NM7', 'NM8', 'NM9', 'NM10', 'NM11', 'NM12', 'NM13',
-              'NM14', 'NM15']
+                   'NM14', 'NM15']
         ip_list = ['IP0', 'IP1', 'IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP9', 'IP10', 'IP11', 'IP12', 'IP13',
-              'IP14', 'IP15']
+                   'IP14', 'IP15']
         id_list = ['ID0', 'ID1', 'ID2', 'ID3', 'ID4', 'ID5', 'ID6', 'ID7', 'ID8', 'ID9', 'ID10', 'ID11', 'ID12', 'ID13',
-              'ID14', 'ID15']
+                   'ID14', 'ID15']
         ps_list = ['PS0', 'PS1', 'PS2', 'PS3', 'PS4', 'PS5', 'PS6', 'PS7', 'PS8', 'PS9', 'PS10', 'PS11', 'PS12', 'PS13',
-              'PS14', 'PS15']
+                   'PS14', 'PS15']
 
         ##############NAME 텍스트 값 불러오기###############
         name_read = []
@@ -437,9 +473,9 @@ class MainWindow(QMainWindow):
         save_button.setFont(my_font)
         save_button.clicked.connect(lambda: self.seyeon_save_and_dialog_close(name, nm_list, ip_list, id_list, ps_list))
         save_button.setStyleSheet("color: white;"
-                            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-                            "border: 1px solid black;"
-                            "border-radius: 20px;")
+                                  "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                                  "border: 1px solid black;"
+                                  "border-radius: 20px;")
         #######load버튼############
         # LoadB = QPushButton('LOAD', self.dialog)
         # LoadB.resize(100,26)
@@ -453,7 +489,7 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('9302/8020')
-        self.dialog.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
@@ -463,13 +499,13 @@ class MainWindow(QMainWindow):
         ############## LINE ###############
 
         nm_list = ['NM0', 'NM1', 'NM2', 'NM3', 'NM4', 'NM5', 'NM6', 'NM7', 'NM8', 'NM9', 'NM10', 'NM11', 'NM12', 'NM13',
-              'NM14', 'NM15']
+                   'NM14', 'NM15']
         ip_list = ['IP0', 'IP1', 'IP2', 'IP3', 'IP4', 'IP5', 'IP6', 'IP7', 'IP8', 'IP9', 'IP10', 'IP11', 'IP12', 'IP13',
-              'IP14', 'IP15']
+                   'IP14', 'IP15']
         id_list = ['ID0', 'ID1', 'ID2', 'ID3', 'ID4', 'ID5', 'ID6', 'ID7', 'ID8', 'ID9', 'ID10', 'ID11', 'ID12', 'ID13',
-              'ID14', 'ID15']
+                   'ID14', 'ID15']
         ps_list = ['PS0', 'PS1', 'PS2', 'PS3', 'PS4', 'PS5', 'PS6', 'PS7', 'PS8', 'PS9', 'PS10', 'PS11', 'PS12', 'PS13',
-              'PS14', 'PS15']
+                   'PS14', 'PS15']
         # ST = ['ST0', 'ST1', 'ST2', 'ST3', 'ST4', 'ST5', 'ST6', 'ST7', 'ST8', 'ST9', 'ST10', 'ST11', 'ST12',
         #       'ST13', 'ST14', 'ST15']
 
@@ -561,9 +597,9 @@ class MainWindow(QMainWindow):
         save_button.setFont(my_font)
         save_button.clicked.connect(lambda: self.save_and_dialog_close(name, nm_list, ip_list, id_list, ps_list))
         save_button.setStyleSheet("color: white;"
-                            "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-                            "border: 1px solid black;"
-                            "border-radius: 20px;")
+                                  "background-color:qlineargradient(spread:reflect, x1:1, y1:0, x2:0.995, y2:1, stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
+                                  "border: 1px solid black;"
+                                  "border-radius: 20px;")
         # StartB.clicked.connect(lambda: self.Start(Name, NM, IP, ID, PS, ST))
         ##################load버튼##################
         # LoadB = QPushButton('LOAD', self.dialog)
@@ -582,19 +618,19 @@ class MainWindow(QMainWindow):
 
         # QDialog 세팅
         self.dialog.setWindowTitle('X3204')
-        self.dialog.setWindowIcon(QIcon(pwd+'/img/exelogo_inv.png'))
+        self.dialog.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
         self.dialog.setWindowModality(Qt.ApplicationModal)
         self.dialog.setFixedSize(520, 500)
         self.dialog.show()
 
     def seyeon_read_file(self, FILE, Case):
         if Case == 'NAME':
-            f = open(pwd+"/config/Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd + "/config/Seyeon_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
         elif Case == 'IP':
-            f = open(pwd+"/config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
+            f = open(pwd + "/config/Seyeon_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
@@ -602,13 +638,13 @@ class MainWindow(QMainWindow):
             f.close()
 
     def read_file(self, FILE, Case):
-        if Case == 'NAME' :
-            f = open(pwd+"/config/Truen_NAME_Save.txt", 'r', encoding='UTF8')
+        if Case == 'NAME':
+            f = open(pwd + "/config/Truen_NAME_Save.txt", 'r', encoding='UTF8')
             t = f.read()
             FILE.append(t)
             f.close()
-        elif Case == 'IP' :
-            f = open(pwd+"/config/Truen_IP_Save.txt", 'r', encoding='UTF8')
+        elif Case == 'IP':
+            f = open(pwd + "/config/Truen_IP_Save.txt", 'r', encoding='UTF8')
             lines = f.readlines()
             for line in lines:
                 line = line.replace('\n', '')
@@ -623,12 +659,12 @@ class MainWindow(QMainWindow):
             self.Print_L.setText("Not process")
 
         ### Truen 프로토콜 실행 ###
-        subprocess.Popen(pwd+"/Thread/Truen_GetHttp_thread.exe", shell=True)
+        subprocess.Popen(pwd + "/Thread/Truen_GetHttp_thread.exe", shell=True)
         self.Print_L.setText('Truen IP search start')
         time.sleep(1)
 
         # ### Seyeon 프로토콜 실행 ###
-        subprocess.Popen(pwd+'/Thread/Seyeon_GetHttp_thread.exe', shell=True)
+        subprocess.Popen(pwd + '/Thread/Seyeon_GetHttp_thread.exe', shell=True)
         self.Print_L.setText('Seyeon IP search start')
 
         self.event = threading.Event()
@@ -658,7 +694,7 @@ class MainWindow(QMainWindow):
             except:
                 self.Print_L.setText('Alarm controller error')
                 pass
-            try :
+            try:
                 threading.Thread(self.show_dialog(object_ip, object_maker, object_id, object_pas)).start()
                 os.remove(full_filename)
             except:
@@ -666,34 +702,34 @@ class MainWindow(QMainWindow):
                 pass
         if self.event.is_set():
             return
-        #QTimer.singleShot(1000, self.table.show())
+        # QTimer.singleShot(1000, self.table.show())
 
-        threading.Timer(5,self.detection_checking).start()
-        
+        threading.Timer(5, self.detection_checking).start()
+
     def show_dialog(self, ip, maker, id, pas):
         self.show_image(ip, maker, id, pas)
         return
 
     def show_image(self, ip, maker, id, pas):
-        register = id+':'+pas+'@'+ip
+        register = id + ':' + pas + '@' + ip
         if 'Sey' in maker:
-            connector = 'rtsp://'+register+'/cam0_1'
+            connector = 'rtsp://' + register + '/cam0_1'
         else:
-            connector = 'rtsp://'+register+'/video1'
+            connector = 'rtsp://' + register + '/video1'
         cap = cv2.VideoCapture(connector)
         width, height, channel = 800, 800, 3
         fps = int(cap.get(cv2.CAP_PROP_FPS))
         second = 3
         count = 0
         self.dialog2.show()
-        while fps*second > count:
-            count+=1
+        while fps * second > count:
+            count += 1
             ret, img = cap.read()
             img = cv2.resize(img, (width, height))
             bgr2rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             qt_img = QImage(bgr2rgb.data,
-                                  width, height, width * channel,
-                                  QImage.Format_RGB888)
+                            width, height, width * channel,
+                            QImage.Format_RGB888)
             pixmap = QPixmap.fromImage(qt_img)
             self.video_viewer_label.setPixmap(pixmap)
             if cv2.waitKey(fps) == 27:
@@ -742,13 +778,13 @@ class MainWindow(QMainWindow):
         table_Count = 0
 
     def write_txt(self):
-        folder = pwd+"/LogData"
+        folder = pwd + "/LogData"
         if not os.path.isdir(folder):
             os.mkdir(folder)
         now = datetime.now()
         now_time = now.strftime('%m%d_%H_%M_%S')
-        
-        path = pwd+"/LogData/" + "Alarm_Data_" + now_time + ".txt"
+
+        path = pwd + "/LogData/" + "Alarm_Data_" + now_time + ".txt"
 
         self.Print_L.setText("Save : " + path)
 
@@ -770,11 +806,11 @@ class MainWindow(QMainWindow):
     ########################################################
     def seyeon_save_and_dialog_close(self, name_list, nm_list, ip_list, id_list, pas_list):
 
-        f = open(pwd+"/config/Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd + "/config/Seyeon_NAME_Save.txt", 'w', encoding='UTF8')
         f.write(name_list.text())
         f.close()
 
-        f = open(pwd+"/config/Seyeon_IP_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd + "/config/Seyeon_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(16):
             f.write(nm_list[i].text() + '\n')
             f.write(ip_list[i].text() + '\n')
@@ -786,11 +822,11 @@ class MainWindow(QMainWindow):
 
     def save_and_dialog_close(self, name_list, nm_list, ip_list, id_list, pas_list):
 
-        f = open(pwd+"/config/Truen_NAME_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd + "/config/Truen_NAME_Save.txt", 'w', encoding='UTF8')
         f.write(name_list.text())
         f.close()
 
-        f = open(pwd+"/config/Truen_IP_Save.txt", 'w', encoding='UTF8')
+        f = open(pwd + "/config/Truen_IP_Save.txt", 'w', encoding='UTF8')
         for i in range(0, 16):
             f.write(nm_list[i].text() + '\n')
             f.write(ip_list[i].text() + '\n')
@@ -818,7 +854,6 @@ class MainWindow(QMainWindow):
         except:
             self.Print_L.setText('There is no process to stop.')
         self.Print_L.setText('All process to stop.')
-
 
     def ligth_status_check(self):
         state = light_dll['Usb_Qu_Getstate']()
