@@ -29,6 +29,8 @@ except:
 
 light_dll = WinDLL(pwd + '/lib/Ux64_dllc.dll')
 
+version = "2.1.230503"
+
 
 def data2dic(txt, model):
     data_dic = {}
@@ -111,7 +113,7 @@ class MainWindow(QMainWindow):
         self.ip_list = [QLineEdit(self) for _ in range(16)]
         self.id_list = [QLineEdit(self) for _ in range(16)]
         self.ps_list = [QLineEdit(self) for _ in range(16)]
-        self.st_list = [QLineEdit('FAIL', self) for _ in range(16)]
+        self.st_list = [QLineEdit('N/A', self) for _ in range(16)]
         self.md_list = [QComboBox(self) for _ in range(16)]
         self.alarm_on_list = [QPushButton('ON', self) for _ in range(16)]
         self.alarm_off_list = [QPushButton('OFF', self) for _ in range(16)]
@@ -124,7 +126,6 @@ class MainWindow(QMainWindow):
                              "stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
         self.process_dis = "stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(90, 97, 101, 255), " \
                            "stop:0.935961 rgba(62, 71, 78, 255), stop:1 rgba(240, 240, 240, 255));"
-
         self.alarm_apply = 'darkgray'
         self.alarm_dis = 'gray'
 
@@ -138,7 +139,7 @@ class MainWindow(QMainWindow):
         # set main window
         self.setGeometry(300, 250, 1350, 600)  # x, y, w, h
         self.setFixedSize(1350, 600)
-        self.setWindowTitle('Alarm Viewer ver1.0')
+        self.setWindowTitle(f'Alarm Viewer - {version}')
         self.setStyleSheet("background-color:#edeef0")
         # self.setStyleSheet("background-color:gray;")
 
@@ -206,7 +207,7 @@ class MainWindow(QMainWindow):
         # Sound OFF radioButton
         self.alarm_radoff.setGeometry(390, 40, 100, 20)
         self.alarm_radoff.setFont(self.font_ecal9)
-        self.alarm_radoff.setChecked(True)
+        self.alarm_radoff.setChecked(True)   # off Default set
 
         # Status check
         self.running_status.setGeometry(280, 10, 90, 50)
@@ -253,11 +254,6 @@ class MainWindow(QMainWindow):
         # 2023-04-20 add
 
         # ======================= Right Page Start ===========================
-
-        # self.right_label.setFont(self.font_ecam12)
-        # self.right_label.setGeometry(630, 30, 150, 20)
-
-        # 카메라 리스트
 
         # 카메라 리스트 작성란
         for i in range(0, 16):
@@ -370,19 +366,19 @@ class MainWindow(QMainWindow):
 
         # 알람설정 & 테스트 모드 라벨
         self.all_onoff_label.setFont(self.font_Tcam)
-        self.all_onoff_label.setGeometry(1155, 55, 200, 10)
+        self.all_onoff_label.setGeometry(1180, 55, 200, 10)
 
         self.test_label.setFont(self.font_Tcam)
-        self.test_label.setGeometry(1280, 55, 200, 10)
+        self.test_label.setGeometry(1290, 55, 200, 10)
 
         # 알람 모두 활성화/비활성화 버튼
         self.all_on_button.setFont(self.font_Tcam)
-        self.all_on_button.setGeometry(1140, 20, 60, 30)
+        self.all_on_button.setGeometry(1138, 20, 60, 30)
         self.all_on_button.setDisabled(True)
         self.all_on_button.setStyleSheet("background-color:#336699;color:white;")
 
         self.all_off_button.setFont(self.font_Tcam)
-        self.all_off_button.setGeometry(1200, 20, 60, 30)
+        self.all_off_button.setGeometry(1202, 20, 60, 30)
         self.all_off_button.setDisabled(True)
         self.all_off_button.setStyleSheet("background-color:#999925;color:white;")
 
@@ -550,7 +546,7 @@ class MainWindow(QMainWindow):
             else:
                 self.st_list[i].setText("FAIL")
                 if manual:
-                    QMessageBox.warning(self, "ALARM", "Fail")
+                    QMessageBox.warning(self, "ALARM", "FAIL")
         except:
             if manual:
                 QMessageBox.warning(self, "ALARM", "Wrong IP")
@@ -558,7 +554,7 @@ class MainWindow(QMainWindow):
             print('Wrong IP')
         self.save_right()
 
-    def alarm_off(self, i=-1, manual=True):
+    def alarm_off(self, i, manual=True):
         ip = self.ip_list[i].text()
         auth = HTTPDigestAuth(self.id_list[i].text(), self.ps_list[i].text())
         model = self.md_list[i].currentText()
@@ -578,7 +574,7 @@ class MainWindow(QMainWindow):
             else:
                 self.st_list[i].setText("FAIL")
                 if manual:
-                    QMessageBox.warning(self, "ALARM", "Fail")
+                    QMessageBox.warning(self, "ALARM", "FAIL")
 
         except:
             if manual:
@@ -642,7 +638,7 @@ class MainWindow(QMainWindow):
                     self.test_list[i].setStyleSheet("background-color: grey;color: white;")
                     QMessageBox.information(self, "TEST", "TEST OFF")
             else:
-                QMessageBox.warning(self, "TEST", "TEST Fail")
+                QMessageBox.warning(self, "TEST", "TEST FAIL")
         except:
             QMessageBox.warning(self, "LOGIN", "Wrong IP")
             print('Wrong IP')
@@ -687,7 +683,10 @@ class MainWindow(QMainWindow):
         for filename in filenames:
             self.Print_L.setText('Detect')
             full_filename = os.path.join("Detection", filename)
-            os.remove(full_filename)
+            try:
+                os.remove(full_filename)
+            except WindowsError as e:
+                pass
 
     # 알람 멈추는 버튼
     def stop_process(self):
@@ -722,6 +721,8 @@ class MainWindow(QMainWindow):
     def detection_checking(self):
         filenames = os.listdir("Detection")
         for filename in filenames:
+            if filename == '.gitkeep':
+                continue
             self.Print_L.setText('Detect')
             full_filename = os.path.join("Detection", filename)
             # name#
