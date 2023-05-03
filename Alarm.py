@@ -248,6 +248,7 @@ class MainWindow(QMainWindow):
         self.popup_dialog.setWindowTitle('Alarm Popup')
         self.popup_dialog.setWindowIcon(QIcon(pwd + '/img/exelogo_inv.png'))
         self.popup_dialog.resize(850, 850)
+
         self.video_viewer_label = QLabel(self.popup_dialog)
         self.video_viewer_label.setGeometry(QRect(10, 10, 800, 800))
 
@@ -856,9 +857,10 @@ class MainWindow(QMainWindow):
                 t = self.alarm_table.item(i, 2).text()
             except AttributeError:
                 break
+            print(ip)
             if t == ip:
                 self.table_off_list[i].setDisabled(True)
-                self.table_off_list[i].setStyleSheet("color: black;"
+                self.table_off_list[i].setStyleSheet("color: lightgray;"
                                                      "background-color: white;")
                 self.table_off_list[i].setFont(self.font_ecal9)
 
