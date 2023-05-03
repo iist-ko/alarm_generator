@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.running_status = QPushButton('STOP', self)
         self.alarm_radoff = QRadioButton('Sound OFF', self)
         self.alarm_radon = QRadioButton('Sound ON', self)
-        self.alarm_label = QLabel('Alarm Option', self)
+        # self.alarm_label = QLabel('Alarm Option', self)
         self.save_reset = QPushButton('SAVE RESET', self)
         self.start_button = QPushButton('START', self)
         self.stop_button = QPushButton('STOP', self)
@@ -122,11 +122,11 @@ class MainWindow(QMainWindow):
 
         self.process_apply = "stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(0, 7, 11, 255), " \
                              "stop:0.935961 rgba(2, 11, 18, 255), stop:1 rgba(240, 240, 240, 255));"
-        self.process_dis = "stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(60, 67, 71, 255), " \
+        self.process_dis = "stop:0 rgba(218, 218, 218, 255), stop:0.305419 rgba(90, 97, 101, 255), " \
                            "stop:0.935961 rgba(62, 71, 78, 255), stop:1 rgba(240, 240, 240, 255));"
 
-        self.alarm_apply = '#b6f09d'
-        self.alarm_dis = '#9ecf8a'
+        self.alarm_apply = 'darkgray'
+        self.alarm_dis = 'gray'
 
         self.soundCheck = 0
         self.event = threading.Event()
@@ -138,8 +138,8 @@ class MainWindow(QMainWindow):
         # set main window
         self.setGeometry(300, 250, 1350, 600)  # x, y, w, h
         self.setFixedSize(1350, 600)
-        self.setWindowTitle('Alarm Viewer')
-        self.setStyleSheet("background-color:#d5dbdf")
+        self.setWindowTitle('Alarm Viewer ver1.0')
+        self.setStyleSheet("background-color:#edeef0")
         # self.setStyleSheet("background-color:gray;")
 
         # set fonts
@@ -196,15 +196,15 @@ class MainWindow(QMainWindow):
 
         # Alarm label
 
-        self.alarm_label.setGeometry(400, 10, 80, 9)
-        self.alarm_label.setFont(self.font_ecal9)
+        # self.alarm_label.setGeometry(400, 10, 80, 9)
+        # self.alarm_label.setFont(self.font_ecal9)
 
         # Sound ON radioButton
-        self.alarm_radon.move(400, 20)
+        self.alarm_radon.setGeometry(390, 15, 100, 25)
         self.alarm_radon.setFont(self.font_ecal9)
 
         # Sound OFF radioButton
-        self.alarm_radoff.move(400, 40)
+        self.alarm_radoff.setGeometry(390, 40, 100, 20)
         self.alarm_radoff.setFont(self.font_ecal9)
         self.alarm_radoff.setChecked(True)
 
@@ -228,11 +228,12 @@ class MainWindow(QMainWindow):
         self.alarm_table.setColumnWidth(4, 80)
         for i in range(100):
             self.table_off_list[i].setObjectName(str(i))
-            self.table_off_list[i].setStyleSheet("color: gray")
+            self.table_off_list[i].setStyleSheet("color: black;"
+                                                 "background-color: white;")
+            self.table_off_list[i].setFont(self.font_ecal9)
             self.table_off_list[i].setDisabled(True)
         self.alarm_table.setGeometry(10, 70, 580, 505)
         self.alarm_table.setStyleSheet("color: black;"
-                                       "background-color: white;"
                                        "border-color: black;")
 
         # Status label
@@ -308,18 +309,18 @@ class MainWindow(QMainWindow):
             self.alarm_on_list[i].setGeometry(1150, 70 + 32 * i, 50, 30)
             self.alarm_on_list[i].setDisabled(True)
             self.alarm_on_list[i].setFont(self.font_ecam12)
-            self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: gray;")
+            self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgray;")
 
             self.alarm_off_list[i].setGeometry(1200, 70 + 32 * i, 50, 30)
             self.alarm_off_list[i].setDisabled(True)
             self.alarm_off_list[i].setFont(self.font_ecam12)
-            self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: gray;")
+            self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgrey;")
 
             self.test_list[i].setText('ON')
             self.test_list[i].setDisabled(True)
             self.test_list[i].setGeometry(1270, 70 + 32 * i, 70, 30)
             self.test_list[i].setFont(self.font_ecam12)
-            self.test_list[i].setStyleSheet("background-color: grey;color: darkgrey;")
+            self.test_list[i].setStyleSheet("background-color: grey; color: darkgrey;")
 
         # 카메라 리스트 인덱스 라벨
         self.name_label.setFont(self.font_Tcam)
@@ -383,7 +384,7 @@ class MainWindow(QMainWindow):
         self.all_off_button.setFont(self.font_Tcam)
         self.all_off_button.setGeometry(1200, 20, 60, 30)
         self.all_off_button.setDisabled(True)
-        self.all_off_button.setStyleSheet("background-color:#CCCC33;color:white;")
+        self.all_off_button.setStyleSheet("background-color:#999925;color:white;")
 
     def setup_back(self):
         self.start_button.clicked.connect(self.start_process)
@@ -471,12 +472,12 @@ class MainWindow(QMainWindow):
                 if data[label] == off_target:
                     self.st_list[i].setText("OFF")
                     self.st_list[i].setStyleSheet("background-color:White;"
-                                                  "color:#CCCC33;"
+                                                  "color:#c7c732;"
                                                   "border: 1px solid Black;"
                                                   "box-shadow: inset 5px 5px 5px -5px #333;")
-                    self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_apply};color: #6699cc;")
+                    self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_apply};color: white;")
                     self.alarm_on_list[i].setEnabled(True)
-                    self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: #cccc33;")
+                    self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgray;")
                     self.alarm_off_list[i].setDisabled(True)
                 else:
                     self.st_list[i].setText("ON")
@@ -484,9 +485,9 @@ class MainWindow(QMainWindow):
                                                   "color:#6699CC;"
                                                   "border: 1px solid Black;"
                                                   "box-shadow: inset 5px 5px 5px -5px #333;")
-                    self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_apply};color: #cccc33;")
+                    self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_apply};color: white;")
                     self.alarm_off_list[i].setEnabled(True)
-                    self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: #6699cc;")
+                    self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgray;")
                     self.alarm_on_list[i].setDisabled(True)
             else:
                 self.st_list[i].setText("FAIL")
@@ -500,9 +501,9 @@ class MainWindow(QMainWindow):
                                           "color:darkred;"
                                           "border: 1px solid Black;"
                                           "box-shadow: inset 5px 5px 5px -5px #333;")
-            self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: #cccc33;")
+            self.alarm_off_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgray;")
             self.alarm_off_list[i].setDisabled(True)
-            self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: #6699cc;")
+            self.alarm_on_list[i].setStyleSheet(f"background-color:{self.alarm_dis};color: darkgray;")
             self.alarm_on_list[i].setDisabled(True)
             self.test_list[i].setStyleSheet("background-color: grey;color: darkgrey;")
             self.test_list[i].setDisabled(True)
@@ -523,7 +524,7 @@ class MainWindow(QMainWindow):
         self.all_on_button.setEnabled(True)
         self.all_off_button.setEnabled(True)
         self.all_on_button.setStyleSheet("background-color:#73aae1;color:white;")
-        self.all_off_button.setStyleSheet("background-color:#dfdf39;color:white;")
+        self.all_off_button.setStyleSheet("background-color:#c7c732;color:white;")
 
         QMessageBox.information(self, "LOGIN SUCCESS", "Login")
         self.save_right()
@@ -701,7 +702,7 @@ class MainWindow(QMainWindow):
             self.Print_L.setText('There is no process to stop.')
         self.running_status.setText('STOP')
         self.running_status.setFont(self.font_k9)
-        self.running_status.setStyleSheet("background-color:#cccc33;"
+        self.running_status.setStyleSheet("background-color:#c7c732;"
                                           "color:white;"
                                           "border-color: 1px solid red;"
                                           "border-radius: 20px;")
@@ -810,7 +811,9 @@ class MainWindow(QMainWindow):
 
         self.alarm_table.setCellWidget(self.table_Count, 4, self.table_off_list[self.table_Count])
         self.table_off_list[self.table_Count].setEnabled(True)
-        self.table_off_list[self.table_Count].setStyleSheet("color: black")
+        self.table_off_list[self.table_Count].setStyleSheet("color: black;"
+                                                            "background-color: white;")
+        self.table_off_list[self.table_Count].setFont(self.font_ecal9)
         self.table_Count += 1
 
         self.alarm_table.update()
@@ -826,10 +829,12 @@ class MainWindow(QMainWindow):
     def log_reset_table(self):
         self.log_write_txt()
         self.alarm_table.clear()
-        self.alarm_table.setHorizontalHeaderLabels(['시간', '이름', 'IP', '알람내용', '알람OFF'])
+        self.alarm_table.setHorizontalHeaderLabels(['Time', 'Name', 'IP', 'Alarm', 'Alarm OFF'])
         self.table_off_list = [QPushButton('OFF') for _ in range(100)]
         for i in range(100):
-            self.table_off_list[i].setStyleSheet("color: gray")
+            self.table_off_list[i].setStyleSheet("color: black;"
+                                                 "background-color: white;")
+            self.table_off_list[i].setFont(self.font_ecal9)
             self.table_off_list[i].setDisabled(True)
             self.table_off_list[i].setObjectName(str(i))
             self.table_off_list[i].clicked.connect(lambda _, b=self.table_off_list[i].objectName():
@@ -852,7 +857,9 @@ class MainWindow(QMainWindow):
                 break
             if t == ip:
                 self.table_off_list[i].setDisabled(True)
-                self.table_off_list[i].setStyleSheet("color: gray")
+                self.table_off_list[i].setStyleSheet("color: black;"
+                                                     "background-color: white;")
+                self.table_off_list[i].setFont(self.font_ecal9)
 
     # 로그 저장 부분
     def log_write_txt(self):
