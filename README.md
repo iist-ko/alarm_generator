@@ -1,9 +1,8 @@
 <h1> alarm_generator </h1> 
 
-<h3> Version - 2.1.230427 </h3>
+<h3> new Version - 2.1.230503 </h3>
 
-
-230503 - Update release note
+[new] 230503 - Update release note
 
 1. UI Update
 2. 일부 오류 해결 
