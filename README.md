@@ -1,12 +1,24 @@
-# alarm_generator
+<h1> alarm_generator </h1> 
+
+<h3> Version - 2.1.230427 </h3>
+
+
+230503 - Update release note
+
+1. UI Update
+2. 일부 오류 해결 
+3. git 오류로 인한 thread remake
+
+
+-----------------------------------------------
 
 Version - 2.0.230427
 
-230427 - Update release
+230427 - Update release note
 
 1. IP 추가 방식 업데이트 - 기존 txt -> json 형식 
 2. Login 버튼 추가
-   1. 해당 버튼을 눌러야 버튼 활성화
+   1. 해당 버튼을 눌러야 모든 버튼 활성화
    2. ip 변경(추가, 수정, 삭제)시 해당 버튼을 눌러야 활성화
 3. Save 버튼 추가
    1. ip 변경(추가, 수정, 삭제)시 버튼 누르면 저장
