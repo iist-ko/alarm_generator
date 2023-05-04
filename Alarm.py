@@ -1,5 +1,6 @@
 import os
 import threading
+import time
 
 import cv2
 import json
@@ -29,7 +30,7 @@ except:
 
 light_dll = WinDLL(pwd + '/lib/Ux64_dllc.dll')
 
-version = "2.1.230503"
+version = "2.2.1.230504"
 
 
 def data2dic(txt, model):
@@ -217,25 +218,7 @@ class MainWindow(QMainWindow):
         self.running_status.setDisabled(True)
 
         # Table
-        self.alarm_table.setRowCount(100)
-        self.alarm_table.setColumnCount(5)
-        self.alarm_table.setHorizontalHeaderLabels(['Time', 'Name', 'IP', 'Alarm', 'Alarm OFF'])
-        self.alarm_table.setFont(self.font_ecal9)
-        self.alarm_table.setAlternatingRowColors(True)
-        self.alarm_table.setColumnWidth(0, 140)
-        self.alarm_table.setColumnWidth(1, 100)
-        self.alarm_table.setColumnWidth(2, 100)
-        self.alarm_table.setColumnWidth(3, 110)
-        self.alarm_table.setColumnWidth(4, 80)
-        for i in range(100):
-            self.table_off_list[i].setObjectName(str(i))
-            self.table_off_list[i].setStyleSheet("color: black;"
-                                                 "background-color: white;")
-            self.table_off_list[i].setFont(self.font_ecal9)
-            self.table_off_list[i].setDisabled(True)
-        self.alarm_table.setGeometry(10, 70, 580, 505)
-        self.alarm_table.setStyleSheet("color: black;"
-                                       "border-color: black;")
+        self.alarm_table_set()
 
         # Status label
         self.Print_L.setGeometry(10, 570, 730, 20)
@@ -401,10 +384,6 @@ class MainWindow(QMainWindow):
             self.alarm_off_list[i].clicked.connect(lambda _, b=i: self.alarm_off(b))
             self.test_list[i].clicked.connect(lambda _, b=i: self.test_on_off(b))
 
-        for i in range(100):
-            self.table_off_list[i].clicked.connect(lambda _, b=self.table_off_list[i].objectName():
-                                                   self.table_off_action(b))
-
         self.all_on_button.clicked.connect(self.alarm_all_on)
         self.all_off_button.clicked.connect(self.alarm_all_off)
 
@@ -527,7 +506,6 @@ class MainWindow(QMainWindow):
         self.save_right()
 
     def alarm_on(self, i, manual=True):
-        print(i)
         # on
         ip = self.ip_list[i].text()
         auth = HTTPDigestAuth(self.id_list[i].text(), self.ps_list[i].text())
@@ -606,7 +584,6 @@ class MainWindow(QMainWindow):
         self.save_right()
 
     def test_on_off(self, i):
-        print(i)
         if not (self.test_list[i].text() == "ON" or self.test_list[i].text() == "OFF"):
             return
         ip = self.ip_list[i].text()
@@ -729,11 +706,14 @@ class MainWindow(QMainWindow):
             # name#
             name, _ip = filename.rstrip(".txt").split("_")
             # IP#
-            f = open(full_filename, 'r', encoding='UTF8')
-            object_list = f.read().split("\n")
-            object_name, object_ip, object_maker, object_id, object_pas, object_idx = object_list
-            f.close()
-            self.write_table(name, _ip, object_name, object_idx)
+            try:
+                f = open(full_filename, 'r', encoding='UTF8')
+                object_list = f.read().split("\n")
+                object_name, object_ip, object_maker, object_id, object_pas, object_idx = object_list
+                f.close()
+                self.write_table(name, _ip, object_name, object_idx)
+            except FileNotFoundError:
+                pass
             try:
                 if self.soundCheck and self.c_index == 10:
                     threading.Thread(target=winsound.PlaySound, args=["sound/fire_detect.wav",
@@ -749,7 +729,7 @@ class MainWindow(QMainWindow):
                 # threading.Thread(self.show_dialog(object_ip, object_maker, object_id, object_pas)).start()
                 os.remove(full_filename)
             except:
-                self.Print_L.setText('Pop up error')
+                # self.Print_L.setText('Pop up error')
                 pass
         if self.event.is_set():
             return
@@ -794,7 +774,6 @@ class MainWindow(QMainWindow):
         # 표에 데이터 삽입
         now = datetime.now()
         now_datetime = now.strftime('%y-%m-%d %H:%M:%S')
-
         item1 = QTableWidgetItem(now_datetime)
         item1.setTextAlignment(Qt.AlignCenter)
         self.alarm_table.setItem(self.table_Count, 0, item1)
@@ -816,35 +795,29 @@ class MainWindow(QMainWindow):
         self.table_off_list[self.table_Count].setStyleSheet("color: black;"
                                                             "background-color: white;")
         self.table_off_list[self.table_Count].setFont(self.font_ecal9)
+        time.sleep(0.1)
         self.table_Count += 1
 
         self.alarm_table.update()
 
         index = self.alarm_table.model().index(self.table_Count, 0)
         self.alarm_table.scrollTo(index)
-        if self.table_Count > 99:
-            self.table_Count = 0
-            self.log_write_txt()
-            self.log_reset_table()
+        if self.table_Count >= 99:
+            self.save_reset.click()
+            time.sleep(0.5)
 
     # 기록 리셋 부분
     def log_reset_table(self):
         self.log_write_txt()
         self.alarm_table.clear()
-        self.alarm_table.setHorizontalHeaderLabels(['Time', 'Name', 'IP', 'Alarm', 'Alarm OFF'])
         self.table_off_list = [QPushButton('OFF') for _ in range(100)]
-        for i in range(100):
-            self.table_off_list[i].setStyleSheet("color: black;"
-                                                 "background-color: white;")
-            self.table_off_list[i].setFont(self.font_ecal9)
-            self.table_off_list[i].setDisabled(True)
-            self.table_off_list[i].setObjectName(str(i))
-            self.table_off_list[i].clicked.connect(lambda _, b=self.table_off_list[i].objectName():
-                                                   self.table_off_action(b))
+        self.alarm_table_set()
 
         self.table_Count = 0
+        index = self.alarm_table.model().index(self.table_Count, 0)
+        self.alarm_table.scrollTo(index)
         self.save_right()
-        QMessageBox.information(self, "SAVE", "LOG SAVE SUCCESS")
+        self.Print_L.setText("LOG SAVE SUCCESS")
 
     def table_off_action(self, object_):
         ip = self.alarm_table.item(int(object_), 2).text()
@@ -857,7 +830,6 @@ class MainWindow(QMainWindow):
                 t = self.alarm_table.item(i, 2).text()
             except AttributeError:
                 break
-            print(ip)
             if t == ip:
                 self.table_off_list[i].setDisabled(True)
                 self.table_off_list[i].setStyleSheet("color: lightgray;"
@@ -890,6 +862,29 @@ class MainWindow(QMainWindow):
         writer.write(txt)
         self.isChanged = False
         writer.close()
+
+    def alarm_table_set(self):
+        self.alarm_table.setRowCount(100)
+        self.alarm_table.setColumnCount(5)
+        self.alarm_table.setHorizontalHeaderLabels(['Time', 'Name', 'IP', 'Alarm', 'Alarm OFF'])
+        self.alarm_table.setFont(self.font_ecal9)
+        self.alarm_table.setAlternatingRowColors(True)
+        self.alarm_table.setColumnWidth(0, 140)
+        self.alarm_table.setColumnWidth(1, 100)
+        self.alarm_table.setColumnWidth(2, 100)
+        self.alarm_table.setColumnWidth(3, 110)
+        self.alarm_table.setColumnWidth(4, 80)
+        for i in range(100):
+            self.table_off_list[i].setObjectName(str(i))
+            self.table_off_list[i].setStyleSheet("color: black;"
+                                                 "background-color: white;")
+            self.table_off_list[i].setFont(self.font_ecal9)
+            self.table_off_list[i].setDisabled(True)
+            self.table_off_list[i].clicked.connect(lambda _, b=self.table_off_list[i].objectName():
+                                                   self.table_off_action(b))
+        self.alarm_table.setGeometry(10, 70, 580, 505)
+        self.alarm_table.setStyleSheet("color: black;"
+                                       "border-color: black;")
 
     ########################################################
 

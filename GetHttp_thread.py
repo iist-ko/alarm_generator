@@ -10,6 +10,7 @@ import os
 
 pwd = os.getcwd()
 
+version = "1.0.4.230504"
 
 def read_json():
     f = open(os.path.join(pwd, "config/ip_data.json"), 'r', encoding='utf-8')
@@ -18,12 +19,22 @@ def read_json():
     return j_data["data"]
 
 
+def data2container(data_read):
+    container = []
+    for d in data_read:
+        n, m, ip, i, pw = d.values()
+        container.append((n, m, ip, i, pw))
+    return container
+
+
 def ip_start():
-    thread = Thread(target=ip_checkable)
+    thread = Thread(target=ip_check)
     thread.start()
 
 
-def ip_checkable():
+def ip_check():
+    global ip_data
+    count = 0
     while True:
         for t in range(len(ip_data)):
             name_, model_, _ip, _id, _pwd = ip_data[t]
@@ -57,12 +68,13 @@ def ip_checkable():
                     f = open(pwd + "/Detection/" + name_ + "_" + _ip + ".txt", 'w', encoding='UTF8')
                     f.write('Fire Alarm\n' + _ip + '\n' + model_ + '\n' + _id + '\n' + _pwd + '\n' + str(t))
                     f.close()
+        count += 1
+        if count >= 50:
+            ip_data = data2container(read_json())
+            count = 0
         time.sleep(3)
 
+
 if __name__ == '__main__':
-    data_read = read_json()
-    ip_data = []
-    for data in data_read:
-        name, model, ip_, id_, pwd_ = data.values()
-        ip_data.append((name, model, ip_, id_, pwd_))
+    ip_data = data2container(read_json())
     ip_start()

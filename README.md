@@ -1,19 +1,32 @@
 <h1> alarm_generator </h1> 
 
-<h3> new Version - 2.1.230503 </h3>
+<h3> new Version - 2.1.2.230504 </h3>
 
-[new] 230503 - Update release note
+
+[new] 2.2.1.230504 - Update release note
+
+1. table 자동 저장 오류 해결
+2. thread 동작중 save 파일 변경시 자동으로 약 5분뒤 detect 하도록 설정
+   1. 수동으로 start, stop으로 설정 가능
+3. detect 도중 stop 버튼을 누르면 늦게 프로세스가 멈추는 현상 해결
+4. 프로그램 속성 업데이트
+
+- readme 작성자: jh choi
+
+
+-----------------------------------------------
+
+2.2.0.230503 - Update release note
 
 1. UI Update
 2. 일부 오류 해결 
 3. git 오류로 인한 thread remake
 
+- readme 작성자: jh choi
 
 -----------------------------------------------
 
-Version - 2.0.230427
-
-230427 - Update release note
+2.1.0.230427 - Update release note
 
 1. IP 추가 방식 업데이트 - 기존 txt -> json 형식 
 2. Login 버튼 추가
@@ -32,3 +45,5 @@ Version - 2.0.230427
    2. wav 파일을 추가하여 화재 발생 알람이 발생
 8. Test 버튼 추가
    1. 단일 버튼으로 활성화, 비활성화 설정
+
+- readme 작성자: jh choi
